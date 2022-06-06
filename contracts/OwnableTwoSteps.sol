@@ -42,20 +42,6 @@ contract OwnableTwoSteps {
     }
 
     /**
-     * @notice Transfer ownership to a new potential owner
-     * @param newPotentialOwner address of the potential owner
-     */
-    function transferOwnership(address newPotentialOwner) external onlyOwner {
-        if (_potentialOwner != address(0)) {
-            revert TransferAlreadyInProgress();
-        }
-
-        _potentialOwner = newPotentialOwner;
-
-        emit InitiateOwnershipTransfer(_owner, newPotentialOwner);
-    }
-
-    /**
      * @notice Cancel transfer of ownership
      */
     function cancelOwnershipTransfer() external onlyOwner {
@@ -71,9 +57,10 @@ contract OwnableTwoSteps {
     }
 
     /**
-     * @notice Accept ownership
+     * @notice Confirm ownership transfer
+     * @dev It can only be called by the current potential owner
      */
-    function acceptOwnership() external {
+    function confirmOwnershipTransfer() external {
         if (msg.sender != _potentialOwner) {
             revert WrongPotentialOwner();
         }
@@ -82,6 +69,20 @@ contract OwnableTwoSteps {
         _potentialOwner = address(0);
 
         emit NewOwner(msg.sender);
+    }
+
+    /**
+     * @notice Initiate transfer of ownership to a new owner
+     * @param newPotentialOwner address of the potential owner
+     */
+    function initiateOwnershipTransfer(address newPotentialOwner) external onlyOwner {
+        if (_potentialOwner != address(0)) {
+            revert TransferAlreadyInProgress();
+        }
+
+        _potentialOwner = newPotentialOwner;
+
+        emit InitiateOwnershipTransfer(_owner, newPotentialOwner);
     }
 
     /**

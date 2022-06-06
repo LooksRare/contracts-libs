@@ -38,14 +38,14 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, OwnableTwoStepsErro
         vm.prank(_OWNER);
         vm.expectEmit(false, false, false, true);
         emit InitiateOwnershipTransfer(_OWNER, newOwner);
-        ownableTwoSteps.transferOwnership(newOwner);
+        ownableTwoSteps.initiateOwnershipTransfer(newOwner);
         assertEq(ownableTwoSteps.potentialOwner(), newOwner);
 
         // 2. Accept ownership transfers
         vm.prank(newOwner);
         vm.expectEmit(false, false, false, true);
         emit NewOwner(newOwner);
-        ownableTwoSteps.acceptOwnership();
+        ownableTwoSteps.confirmOwnershipTransfer();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.owner(), newOwner);
     }
@@ -58,10 +58,10 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, OwnableTwoStepsErro
         vm.prank(_OWNER);
         vm.expectEmit(false, false, false, true);
         emit InitiateOwnershipTransfer(_OWNER, newOwner);
-        ownableTwoSteps.transferOwnership(newOwner);
+        ownableTwoSteps.initiateOwnershipTransfer(newOwner);
 
         vm.prank(wrongOwner);
         vm.expectRevert(WrongPotentialOwner.selector);
-        ownableTwoSteps.acceptOwnership();
+        ownableTwoSteps.confirmOwnershipTransfer();
     }
 }
