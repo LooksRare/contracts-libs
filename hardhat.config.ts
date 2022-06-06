@@ -33,7 +33,7 @@ const config: HardhatUserConfig = {
   solidity: {
     compilers: [
       {
-        version: "0.8.7",
+        version: "0.8.14",
         settings: { optimizer: { enabled: true, runs: 888888 } },
       },
       {
@@ -54,11 +54,11 @@ const config: HardhatUserConfig = {
     clear: true,
     flat: true,
     pretty: false,
-    except: ["test*", "@openzeppelin*", "uniswap*"],
+    except: ["test*"],
   },
   gasReporter: {
     enabled: !!process.env.REPORT_GAS,
-    excludeContracts: ["test*", "@openzeppelin*"],
+    excludeContracts: ["test*"],
   },
 };
 
