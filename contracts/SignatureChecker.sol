@@ -61,22 +61,23 @@ abstract contract SignatureChecker {
 
     /**
      * @notice Checks whether the signer is valid
-     * @param digest EIP-712 digest (computed with signature hash and domain separator)
+     * @param hash data hash
      * @param signer the signer address (to confirm message validity)
-     * @param signature signature parameters encoded
+     * @param signature signature parameters encoded (v, r, s)
+     * @dev For EIP-712 signatures, the hash must be the digest (computed with signature hash and domain separator)
      */
     function _verify(
-        bytes32 digest,
+        bytes32 hash,
         address signer,
         bytes memory signature
     ) internal view {
-        if (signer.code.length != 0) {
-            if (IERC1271(signer).isValidSignature(digest, signature) != 0x1626ba7e) {
-                revert InvalidSignatureERC1271();
+        if (signer.code.length == 0) {
+            if (_recoverEOASigner(hash, signature) != signer) {
+                revert InvalidSignatureEOA();
             }
         } else {
-            if (_recoverEOASigner(digest, signature) != signer) {
-                revert InvalidSignatureEOA();
+            if (IERC1271(signer).isValidSignature(hash, signature) != 0x1626ba7e) {
+                revert InvalidSignatureERC1271();
             }
         }
     }
