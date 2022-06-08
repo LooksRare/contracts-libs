@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.14;
 
 import {OwnableTwoSteps} from "../../contracts/OwnableTwoSteps.sol";
-import {TestHelpers} from "./TestHelpers.sol";
+import {TestHelpers} from "./utils/TestHelpers.sol";
 
 abstract contract TestParameters {
     address internal _OWNER = address(42);
