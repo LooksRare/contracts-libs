@@ -4,4 +4,4 @@ cache
 coverage*
 gasReporterOutput.json
 typechain
-lib/ds-test
+lib

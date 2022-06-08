@@ -18,11 +18,11 @@ abstract contract TestParameters is TestHelpers {
     uint256 internal privateKeyUser1 = 0x00aaf;
     uint256 internal privateKeyUser2 = 0x00aabf;
 
-    // Derive public keys
+    // Derive two public keys from private keys
     address internal user1 = vm.addr(privateKeyUser1);
     address internal user2 = vm.addr(privateKeyUser2);
 
-    // Random message signed
+    // Random message signed across tests
     bytes32 internal _message = keccak256("Hello World");
 }
 
