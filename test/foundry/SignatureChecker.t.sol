@@ -2,8 +2,8 @@
 pragma solidity 0.8.14;
 
 import {SignatureChecker} from "../../contracts/SignatureChecker.sol";
-import {TestHelpers} from "./TestHelpers.sol";
 import {ERC1271Contract} from "./utils/ERC1271Contract.sol";
+import {TestHelpers} from "./utils/TestHelpers.sol";
 
 abstract contract SignatureCheckerErrors {
     error BadSignatureS();
@@ -24,15 +24,6 @@ abstract contract TestParameters is TestHelpers {
 
     // Random message signed
     bytes32 internal _message = keccak256("Hello World");
-
-    function _signMessage(bytes32 message, uint256 _key) internal returns (bytes memory) {
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(_key, keccak256(abi.encodePacked(message)));
-        return abi.encodePacked(r, s, v);
-    }
-
-    function _computeHash(bytes32 message) internal returns (bytes32) {
-        return keccak256(abi.encodePacked(message));
-    }
 }
 
 contract PublicSignatureChecker is SignatureChecker {
