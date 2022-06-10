@@ -1,6 +1,6 @@
-# Solidity template
+# Contract libs
 
-This is a template for GitHub repos with Solidity smart contracts using Forge and Hardhat. This template is used by the LooksRare team for Solidity-based repos. Feel free to use or get inspired to build your own templates!
+This repo contains a few custom implementations of Solidity files used by LooksRare teams.
 
 ## About this repo
 
