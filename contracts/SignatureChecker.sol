@@ -13,6 +13,7 @@ abstract contract SignatureChecker {
     error BadSignatureV(uint8 v);
     error InvalidSignatureERC1271();
     error InvalidSignatureEOA();
+    error NullSignerAddress();
     error WrongSignatureLength(uint256 length);
 
     /**
@@ -55,6 +56,10 @@ abstract contract SignatureChecker {
 
         // If the signature is valid (and not malleable), return the signer address
         address signer = ecrecover(hash, v, r, s);
+
+        if (signer == address(0)) {
+            revert NullSignerAddress();
+        }
 
         return signer;
     }
