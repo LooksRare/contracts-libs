@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.14;
+pragma solidity ^0.8.14;
 
 import {Test} from "../../../lib/forge-std/src/Test.sol";
 
@@ -15,7 +15,7 @@ abstract contract TestHelpers is Test {
         return abi.encodePacked(r, s, v);
     }
 
-    function _computeHash(bytes32 message) internal returns (bytes32) {
+    function _computeHash(bytes32 message) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked(message));
     }
 }

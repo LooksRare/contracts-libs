@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.14;
+pragma solidity ^0.8.14;
 
 import {OwnableTwoSteps} from "../../contracts/OwnableTwoSteps.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
