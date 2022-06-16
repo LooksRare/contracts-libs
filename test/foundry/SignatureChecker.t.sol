@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.14;
+pragma solidity ^0.8.14;
 
 import {SignatureChecker} from "../../contracts/SignatureChecker.sol";
 import {ERC1271Contract} from "./utils/ERC1271Contract.sol";
@@ -35,7 +35,7 @@ contract PublicSignatureChecker is SignatureChecker {
         bytes32 hash,
         address signer,
         bytes memory signature
-    ) external returns (bool) {
+    ) external view returns (bool) {
         // It reverts if wrong
         _verify(hash, signer, signature);
         return true;
