@@ -1,6 +1,6 @@
 # Contract libs
 
-This repo contains a few custom implementations of Solidity files used by LooksRare teams.
+This repository contains a set of Solidity contracts that can be used across contracts for purposes such as verifying signatures, protecting contracts against reentrancy attacks, and a library for managing the ownership of a contract.
 
 ## About this repo
 
@@ -12,8 +12,7 @@ It is a hybrid [Hardhat](https://hardhat.org/) repo that also requires [Foundry]
 
 ### Run tests
 
-- TypeScript tests are included in the `test` folder at the root of this repo.
-- Solidity tests are included in the `test` folder in the `contracts` folder.
+- Solidity tests are included in the `foundry` folder in the `test` folder.
 
 ### Example of Foundry/Forge commands
 
