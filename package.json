@@ -1,7 +1,7 @@
 {
   "name": "@looksrare/contract-libs",
-  "version": "0.0.0",
-  "description": "LooksRare contract helpers",
+  "version": "0.1.0",
+  "description": "LooksRare contract helper libraries",
   "author": "LooksRare",
   "license": "MIT",
   "private": true,
@@ -15,13 +15,14 @@
     "url": "https://github.com/LooksRare/contracts-libs.git"
   },
   "scripts": {
-    "compile": "hardhat compile",
-    "compile:force": "hardhat compile --force",
+    "compile:hardhat": "hardhat compile",
+    "compile:forge": "forge build",
+    "compile:hardhat:force": "hardhat compile --force",
     "format:check": "prettier --check '**/*.{js,jsx,ts,tsx,sol,json,yaml,md}'",
     "format:write": "prettier --write '**/*.{js,jsx,ts,tsx,json,yaml,md}'",
     "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
     "prepare": "husky install",
-    "test": "hardhat test",
+    "test:hardhat": "hardhat test",
     "test:gas": "REPORT_GAS=true hardhat test",
     "test:forge": "forge test",
     "test:coverage": "hardhat coverage && hardhat compile --force"
