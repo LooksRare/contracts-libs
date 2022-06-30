@@ -1,12 +1,13 @@
 {
   "name": "@looksrare/contract-libs",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "LooksRare contract helper libraries",
   "author": "LooksRare",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "keywords": [
-    "looksrare"
+    "looksrare",
+    "solidity"
   ],
   "homepage": "https://looksrare.org/",
   "bugs": "https://github.com/LooksRare/contracts-libs/issues",
