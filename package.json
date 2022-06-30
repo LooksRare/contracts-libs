@@ -9,6 +9,11 @@
     "looksrare",
     "solidity"
   ],
+  "files": [
+    "/abis/*.json",
+    "/contracts/*.sol",
+    "/contracts/interfaces/*.sol"
+  ],
   "homepage": "https://looksrare.org/",
   "bugs": "https://github.com/LooksRare/contracts-libs/issues",
   "repository": {
