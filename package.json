@@ -28,6 +28,7 @@
     "format:write": "prettier --write '**/*.{js,jsx,ts,tsx,json,yaml,md}'",
     "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
     "prepare": "husky install",
+    "release": "release-it",
     "test:hardhat": "hardhat test",
     "test:gas": "REPORT_GAS=true hardhat test",
     "test:forge": "forge test",
