@@ -1,4 +1,4 @@
-# @looksrare/contract-libs
+# @looksrare/contracts-libs
 
 This repository contains a set of Solidity contracts that can be used across contracts for purposes such as verifying signatures, protecting contracts against reentrancy attacks, and a library for managing the ownership of a contract.
 
