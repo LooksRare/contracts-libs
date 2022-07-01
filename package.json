@@ -5,20 +5,27 @@
   "author": "LooksRare",
   "license": "MIT",
   "private": false,
-  "keywords": [
-    "looksrare",
-    "solidity"
-  ],
   "files": [
     "/abis/*.json",
     "/contracts/*.sol",
     "/contracts/interfaces/*.sol"
   ],
+  "keywords": [
+    "looksrare",
+    "solidity"
+  ],
+  "engines": {
+    "node": ">=8.3.0"
+  },
   "homepage": "https://looksrare.org/",
   "bugs": "https://github.com/LooksRare/contracts-libs/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/LooksRare/contracts-libs.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "scripts": {
     "compile:hardhat": "hardhat compile",
@@ -29,10 +36,10 @@
     "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
     "prepare": "husky install",
     "release": "release-it",
-    "test:hardhat": "hardhat test",
-    "test:gas": "REPORT_GAS=true hardhat test",
     "test:forge": "forge test",
-    "test:coverage": "hardhat coverage && hardhat compile --force"
+    "test:hardhat": "hardhat test",
+    "test:hardhat:gas": "REPORT_GAS=true hardhat test",
+    "test:hardhat:coverage": "hardhat coverage && hardhat compile --force"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
