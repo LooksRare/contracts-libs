@@ -60,7 +60,7 @@ abstract contract SignatureChecker {
      * @param signature bytes containing the signature (64 or 65 bytes)
      */
     function _recoverEOASigner(bytes32 hash, bytes memory signature) internal pure returns (address) {
-        (uint8 v, bytes32 r, bytes32 s) = _splitSignature(signature);
+        (bytes32 r, bytes32 s, uint8 v) = _splitSignature(signature);
 
         // If the signature is valid (and not malleable), return the signer address
         address signer = ecrecover(hash, v, r, s);
