@@ -16,6 +16,13 @@ abstract contract SignatureChecker {
     error NullSignerAddress();
     error WrongSignatureLength(uint256 length);
 
+    /**
+     * @notice Split a signature into r,s,v outputs
+     * @param signature A 64 or 65 bytes signature
+     * @return r The r output of the signature
+     * @return s The s output of the signature
+     * @return v The recovery identifier, must be 27 or 28
+     */
     function _splitSignature(bytes memory signature)
         internal
         pure
