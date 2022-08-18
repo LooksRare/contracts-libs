@@ -17,15 +17,21 @@ abstract contract SignatureChecker {
     error WrongSignatureLength(uint256 length);
 
     /**
-     * @notice Recover the signer of a signature (for EOA)
-     * @param hash the hash of the signed message
-     * @param signature bytes containing the signature (64 or 65 bytes)
+     * @notice Split a signature into r,s,v outputs
+     * @param signature A 64 or 65 bytes signature
+     * @return r The r output of the signature
+     * @return s The s output of the signature
+     * @return v The recovery identifier, must be 27 or 28
      */
-    function _recoverEOASigner(bytes32 hash, bytes memory signature) internal pure returns (address) {
-        uint8 v;
-        bytes32 r;
-        bytes32 s;
-
+    function _splitSignature(bytes memory signature)
+        internal
+        pure
+        returns (
+            bytes32 r,
+            bytes32 s,
+            uint8 v
+        )
+    {
         if (signature.length == 64) {
             bytes32 vs;
             assembly {
@@ -53,6 +59,15 @@ abstract contract SignatureChecker {
         if (v != 27 && v != 28) {
             revert BadSignatureV(v);
         }
+    }
+
+    /**
+     * @notice Recover the signer of a signature (for EOA)
+     * @param hash the hash of the signed message
+     * @param signature bytes containing the signature (64 or 65 bytes)
+     */
+    function _recoverEOASigner(bytes32 hash, bytes memory signature) internal pure returns (address) {
+        (bytes32 r, bytes32 s, uint8 v) = _splitSignature(signature);
 
         // If the signature is valid (and not malleable), return the signer address
         address signer = ecrecover(hash, v, r, s);
