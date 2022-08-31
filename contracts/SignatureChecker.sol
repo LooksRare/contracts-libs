@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;
 
-import {IERC1271} from "./interfaces/IERC1271.sol";
+import {IERC1271} from "./interfaces/generic/IERC1271.sol";
 import {ISignatureChecker} from "./interfaces/ISignatureChecker.sol";
 
 /**
