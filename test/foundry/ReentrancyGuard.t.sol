@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;
 
-import {ReentrancyGuard} from "../../contracts/ReentrancyGuard.sol";
+import {ReentrancyGuard, IReentrancyGuard} from "../../contracts/ReentrancyGuard.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
 interface IFaucet {
@@ -79,11 +79,7 @@ contract ReentrancyCaller {
     }
 }
 
-abstract contract ReentrancyGuardErrors {
-    error ReentrancyFail();
-}
-
-contract ReentrancyGuardTest is TestHelpers, ReentrancyGuardErrors {
+contract ReentrancyGuardTest is TestHelpers {
     SafeFaucet public safeFaucet;
     UnsafeFaucet public unsafeFaucet;
 
