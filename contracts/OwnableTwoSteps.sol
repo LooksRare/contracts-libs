@@ -112,7 +112,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
         status = Status.RenouncementInProgress;
         _earliestOwnershipRenouncementTime = block.timestamp + delay;
 
-        emit InitiateOwnershipRenouncement();
+        emit InitiateOwnershipRenouncement(_earliestOwnershipRenouncementTime);
     }
 
     /**

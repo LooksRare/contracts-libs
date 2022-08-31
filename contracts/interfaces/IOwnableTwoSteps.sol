@@ -22,7 +22,7 @@ contract IOwnableTwoSteps {
 
     // Events
     event CancelOwnershipTransfer();
-    event InitiateOwnershipRenouncement();
+    event InitiateOwnershipRenouncement(uint256 earliestOwnershipRenouncementTime);
     event InitiateOwnershipTransfer(address previousOwner, address potentialOwner);
     event NewOwner(address newOwner);
 }
