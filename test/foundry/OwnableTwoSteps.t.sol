@@ -54,10 +54,10 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
     function testRenounceOwnership() public asPrankedUser(_OWNER) {
         // 1. Initiate renouncement of ownership
         vm.expectEmit(false, false, false, true);
-        emit InitiateOwnershipRenouncement(block.timestamp + ownableTwoSteps.delay());
+        emit InitiateOwnershipRenouncement(block.timestamp + _delay);
         ownableTwoSteps.initiateOwnershipRenouncement();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
-        assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + ownableTwoSteps.delay());
+        assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + _delay);
         assertEq(uint8(ownableTwoSteps.status()), uint8(Status.RenouncementInProgress));
 
         // 2. Confirm renouncement of ownership
@@ -79,7 +79,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         emit InitiateOwnershipTransfer(_OWNER, newOwner);
         ownableTwoSteps.initiateOwnershipTransfer(newOwner);
         assertEq(ownableTwoSteps.potentialOwner(), newOwner);
-        assertEq(uint8(ownableTwoSteps.status()), 1);
+        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.TransferInProgress));
 
         // 2. Cancel ownership transfer
         vm.expectEmit(false, false, false, true);
@@ -91,10 +91,10 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
 
         // 3. Initiate ownership renouncement
         vm.expectEmit(false, false, false, true);
-        emit InitiateOwnershipRenouncement(block.timestamp + ownableTwoSteps.delay());
+        emit InitiateOwnershipRenouncement(block.timestamp + _delay);
         ownableTwoSteps.initiateOwnershipRenouncement();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
-        assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + ownableTwoSteps.delay());
+        assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + _delay);
         assertEq(uint8(ownableTwoSteps.status()), uint8(Status.RenouncementInProgress));
 
         // 4. Cancel ownership renouncement
@@ -124,10 +124,10 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
     function testCannotConfirmRenouncementOwnershipPriorToTimelock() public asPrankedUser(_OWNER) {
         // Initiate renouncement of ownership
         vm.expectEmit(false, false, false, true);
-        emit InitiateOwnershipRenouncement(block.timestamp + ownableTwoSteps.delay());
+        emit InitiateOwnershipRenouncement(block.timestamp + _delay);
         ownableTwoSteps.initiateOwnershipRenouncement();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
-        assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + ownableTwoSteps.delay());
+        assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + _delay);
         assertEq(uint8(ownableTwoSteps.status()), uint8(Status.RenouncementInProgress));
 
         // Time travel to 1 second prior to end of timelock
