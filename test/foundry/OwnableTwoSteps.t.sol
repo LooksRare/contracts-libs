@@ -54,7 +54,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
     function testRenounceOwnership() public asPrankedUser(_OWNER) {
         // 1. Initiate renouncement of ownership
         vm.expectEmit(false, false, false, true);
-        emit InitiateOwnershipRenouncement();
+        emit InitiateOwnershipRenouncement(block.timestamp + ownableTwoSteps.delay());
         ownableTwoSteps.initiateOwnershipRenouncement();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + ownableTwoSteps.delay());
@@ -91,7 +91,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
 
         // 3. Initiate ownership renouncement
         vm.expectEmit(false, false, false, true);
-        emit InitiateOwnershipRenouncement();
+        emit InitiateOwnershipRenouncement(block.timestamp + ownableTwoSteps.delay());
         ownableTwoSteps.initiateOwnershipRenouncement();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + ownableTwoSteps.delay());
@@ -124,7 +124,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
     function testCannotConfirmRenouncementOwnershipPriorToTimelock() public asPrankedUser(_OWNER) {
         // Initiate renouncement of ownership
         vm.expectEmit(false, false, false, true);
-        emit InitiateOwnershipRenouncement();
+        emit InitiateOwnershipRenouncement(block.timestamp + ownableTwoSteps.delay());
         ownableTwoSteps.initiateOwnershipRenouncement();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + ownableTwoSteps.delay());
@@ -133,6 +133,31 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         // Time travel to 1 second prior to end of timelock
         vm.warp(ownableTwoSteps.earliestOwnershipRenouncementTime() - 1);
         vm.expectRevert(RenouncementTooEarly.selector);
+        ownableTwoSteps.confirmOwnershipRenouncement();
+    }
+
+    function testOwnableFunctionsOnlyCallableByOwner() public {
+        address wrongOwner = address(30);
+        vm.startPrank(wrongOwner);
+
+        vm.expectRevert(NotOwner.selector);
+        ownableTwoSteps.cancelOwnershipTransfer();
+
+        vm.expectRevert(NotOwner.selector);
+        ownableTwoSteps.confirmOwnershipRenouncement();
+
+        vm.expectRevert(NotOwner.selector);
+        ownableTwoSteps.initiateOwnershipTransfer(wrongOwner);
+
+        vm.expectRevert(NotOwner.selector);
+        ownableTwoSteps.initiateOwnershipRenouncement();
+    }
+
+    function testCannotConfirmOwnershipOrRenouncementTransferIfNotInProgress() public asPrankedUser(_OWNER) {
+        vm.expectRevert(TransferNotInProgress.selector);
+        ownableTwoSteps.confirmOwnershipTransfer();
+
+        vm.expectRevert(RenouncementNotInProgress.selector);
         ownableTwoSteps.confirmOwnershipRenouncement();
     }
 }
