@@ -41,7 +41,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         assertEq(ownableTwoSteps.potentialOwner(), newOwner);
         assertEq(uint8(ownableTwoSteps.status()), uint8(Status.TransferInProgress));
 
-        // 2. Accept ownership transfers
+        // 2. Accept ownership's transfer
         vm.prank(newOwner);
         vm.expectEmit(false, false, false, true);
         emit NewOwner(newOwner);
@@ -159,5 +159,30 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
 
         vm.expectRevert(RenouncementNotInProgress.selector);
         ownableTwoSteps.confirmOwnershipRenouncement();
+    }
+
+    function testCannotCancelTransferIfNoTransferInProgress() public asPrankedUser(_OWNER) {
+        vm.expectRevert(NoOngoingTransferInProgress.selector);
+        ownableTwoSteps.cancelOwnershipTransfer();
+    }
+
+    function testCannotRenounceOrInitiateTransferASecondtime() public asPrankedUser(_OWNER) {
+        // 1. Cannot initiate renouncement/transfer to new owner after transfer to new owner is initiated
+        address newOwner = address(45);
+        ownableTwoSteps.initiateOwnershipTransfer(newOwner);
+        vm.expectRevert(TransferAlreadyInProgress.selector);
+        ownableTwoSteps.initiateOwnershipTransfer(newOwner);
+        vm.expectRevert(TransferAlreadyInProgress.selector);
+        ownableTwoSteps.initiateOwnershipRenouncement();
+
+        // Reset status
+        ownableTwoSteps.cancelOwnershipTransfer();
+
+        // 2. Cannot initiate renouncement/transfer to new owner after renouncement is initiated
+        ownableTwoSteps.initiateOwnershipRenouncement();
+        vm.expectRevert(TransferAlreadyInProgress.selector);
+        ownableTwoSteps.initiateOwnershipRenouncement();
+        vm.expectRevert(TransferAlreadyInProgress.selector);
+        ownableTwoSteps.initiateOwnershipTransfer(newOwner);
     }
 }
