@@ -41,7 +41,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         assertEq(ownableTwoSteps.potentialOwner(), newOwner);
         assertEq(uint8(ownableTwoSteps.status()), uint8(Status.TransferInProgress));
 
-        // 2. Accept ownership's transfer
+        // 2. Accept ownership transfer
         vm.prank(newOwner);
         vm.expectEmit(false, false, false, true);
         emit NewOwner(newOwner);
@@ -136,9 +136,8 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         ownableTwoSteps.confirmOwnershipRenouncement();
     }
 
-    function testOwnableFunctionsOnlyCallableByOwner() public {
-        address wrongOwner = address(30);
-        vm.startPrank(wrongOwner);
+    function testOwnableFunctionsOnlyCallableByOwner(address randomUser) public asPrankedUser(randomUser) {
+        vm.assume(randomUser != _OWNER);
 
         vm.expectRevert(NotOwner.selector);
         ownableTwoSteps.cancelOwnershipTransfer();
@@ -147,7 +146,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         ownableTwoSteps.confirmOwnershipRenouncement();
 
         vm.expectRevert(NotOwner.selector);
-        ownableTwoSteps.initiateOwnershipTransfer(wrongOwner);
+        ownableTwoSteps.initiateOwnershipTransfer(randomUser);
 
         vm.expectRevert(NotOwner.selector);
         ownableTwoSteps.initiateOwnershipRenouncement();
