@@ -24,10 +24,15 @@ contract UnsafeFaucet is IFaucet {
 
         assembly {
             status := call(gas(), to, amount, 0, 0, 0, 0)
-        }
-
-        if (!status) {
-            revert();
+            // returndatacopy(t, f, s)
+            // copy s bytes from returndata at position f to mem at position t
+            returndatacopy(0, 0, returndatasize())
+            switch status
+            case 0 {
+                // revert(p, s)
+                // end execution, revert state changes, return data mem[p…(p+s))
+                revert(0, returndatasize())
+            }
         }
 
         _hasClaimed[msg.sender] = true;
@@ -48,10 +53,15 @@ contract SafeFaucet is IFaucet, ReentrancyGuard {
 
         assembly {
             status := call(gas(), to, amount, 0, 0, 0, 0)
-        }
-
-        if (!status) {
-            revert();
+            // returndatacopy(t, f, s)
+            // copy s bytes from returndata at position f to mem at position t
+            returndatacopy(0, 0, returndatasize())
+            switch status
+            case 0 {
+                // revert(p, s)
+                // end execution, revert state changes, return data mem[p…(p+s))
+                revert(0, returndatasize())
+            }
         }
 
         _hasClaimed[msg.sender] = true;
@@ -79,7 +89,7 @@ contract ReentrancyCaller {
     }
 }
 
-contract ReentrancyGuardTest is TestHelpers {
+contract ReentrancyGuardTest is TestHelpers, IReentrancyGuard {
     SafeFaucet public safeFaucet;
     UnsafeFaucet public unsafeFaucet;
 
@@ -102,7 +112,7 @@ contract ReentrancyGuardTest is TestHelpers {
     function testSafeFaucet() public {
         ReentrancyCaller reentrancyCaller = new ReentrancyCaller(address(safeFaucet));
 
-        vm.expectRevert();
+        vm.expectRevert(ReentrancyFail.selector);
         reentrancyCaller.claim();
         assertEq(uint256(address(reentrancyCaller).balance), 0 ether);
     }
