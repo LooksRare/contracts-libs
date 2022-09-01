@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
 
-import {IERC1271} from "../../../contracts/interfaces/IERC1271.sol";
+import {IERC1271} from "../../../contracts/interfaces/generic/IERC1271.sol";
 
 contract ERC1271Contract is IERC1271 {
     // Custom errors

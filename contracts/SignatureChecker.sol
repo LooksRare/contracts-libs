@@ -1,21 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;
 
-import {IERC1271} from "./interfaces/IERC1271.sol";
+import {IERC1271} from "./interfaces/generic/IERC1271.sol";
+import {ISignatureChecker} from "./interfaces/ISignatureChecker.sol";
 
 /**
  * @title SignatureChecker
  * @notice This contract is used to verify signatures for EOAs (with length of both 65 and 64 bytes) and contracts (ERC-1271).
  */
-abstract contract SignatureChecker {
-    // Custom errors
-    error BadSignatureS();
-    error BadSignatureV(uint8 v);
-    error InvalidSignatureERC1271();
-    error InvalidSignatureEOA();
-    error NullSignerAddress();
-    error WrongSignatureLength(uint256 length);
-
+abstract contract SignatureChecker is ISignatureChecker {
     /**
      * @notice Split a signature into r,s,v outputs
      * @param signature A 64 or 65 bytes signature
