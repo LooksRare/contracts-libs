@@ -1,17 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;
 
-import {SignatureChecker} from "../../contracts/SignatureChecker.sol";
+import {SignatureChecker, ISignatureChecker} from "../../contracts/SignatureChecker.sol";
 import {ERC1271Contract} from "./utils/ERC1271Contract.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
-
-abstract contract SignatureCheckerErrors {
-    error BadSignatureS();
-    error BadSignatureV(uint8 v);
-    error InvalidSignatureERC1271();
-    error InvalidSignatureEOA();
-    error WrongSignatureLength(uint256 length);
-}
 
 abstract contract TestParameters is TestHelpers {
     // Generate two random private keys
@@ -54,7 +46,7 @@ contract PublicSignatureChecker is SignatureChecker {
     }
 }
 
-contract SignatureCheckerTest is TestHelpers, TestParameters, SignatureCheckerErrors {
+contract SignatureCheckerTest is TestHelpers, TestParameters, ISignatureChecker {
     PublicSignatureChecker public signatureChecker;
 
     function setUp() public {

@@ -1,19 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;
 
-import {ReentrancyGuard} from "../../contracts/ReentrancyGuard.sol";
+import {ReentrancyGuard, IReentrancyGuard} from "../../contracts/ReentrancyGuard.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
-interface IFaucet {
+abstract contract Faucet {
     error AlreadyClaimed();
 
-    function claim() external;
-}
-
-contract UnsafeFaucet is IFaucet {
     mapping(address => bool) internal _hasClaimed;
 
-    function claim() external override {
+    function claim() external virtual;
+
+    function _claim() internal {
         if (_hasClaimed[msg.sender]) {
             revert AlreadyClaimed();
         }
@@ -24,46 +22,39 @@ contract UnsafeFaucet is IFaucet {
 
         assembly {
             status := call(gas(), to, amount, 0, 0, 0, 0)
-        }
-
-        if (!status) {
-            revert();
+            // returndatacopy(t, f, s)
+            // copy s bytes from returndata at position f to mem at position t
+            returndatacopy(0, 0, returndatasize())
+            switch status
+            case 0 {
+                // revert(p, s)
+                // end execution, revert state changes, return data mem[p…(p+s))
+                revert(0, returndatasize())
+            }
         }
 
         _hasClaimed[msg.sender] = true;
     }
 }
 
-contract SafeFaucet is IFaucet, ReentrancyGuard {
-    mapping(address => bool) internal _hasClaimed;
+contract UnsafeFaucet is Faucet {
+    function claim() external override {
+        _claim();
+    }
+}
 
+contract SafeFaucet is Faucet, ReentrancyGuard {
     function claim() external override nonReentrant {
-        if (_hasClaimed[msg.sender]) {
-            revert AlreadyClaimed();
-        }
-
-        bool status;
-        address to = msg.sender;
-        uint256 amount = 0.01 ether;
-
-        assembly {
-            status := call(gas(), to, amount, 0, 0, 0, 0)
-        }
-
-        if (!status) {
-            revert();
-        }
-
-        _hasClaimed[msg.sender] = true;
+        _claim();
     }
 }
 
 contract ReentrancyCaller {
     uint256 private _counter;
-    IFaucet public faucet;
+    Faucet public faucet;
 
     constructor(address _faucet) {
-        faucet = IFaucet(_faucet);
+        faucet = Faucet(_faucet);
     }
 
     receive() external payable {
@@ -79,18 +70,14 @@ contract ReentrancyCaller {
     }
 }
 
-abstract contract ReentrancyGuardErrors {
-    error ReentrancyFail();
-}
-
-contract ReentrancyGuardTest is TestHelpers, ReentrancyGuardErrors {
+contract ReentrancyGuardTest is TestHelpers, IReentrancyGuard {
     SafeFaucet public safeFaucet;
     UnsafeFaucet public unsafeFaucet;
 
     function setUp() public {
         safeFaucet = new SafeFaucet();
         unsafeFaucet = new UnsafeFaucet();
-
+        // Top up the faucets
         vm.deal(address(safeFaucet), 200 ether);
         vm.deal(address(unsafeFaucet), 200 ether);
     }
@@ -106,7 +93,7 @@ contract ReentrancyGuardTest is TestHelpers, ReentrancyGuardErrors {
     function testSafeFaucet() public {
         ReentrancyCaller reentrancyCaller = new ReentrancyCaller(address(safeFaucet));
 
-        vm.expectRevert();
+        vm.expectRevert(ReentrancyFail.selector);
         reentrancyCaller.claim();
         assertEq(uint256(address(reentrancyCaller).balance), 0 ether);
     }
