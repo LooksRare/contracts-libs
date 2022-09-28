@@ -10,25 +10,25 @@ import {IOwnableTwoSteps} from "./interfaces/IOwnableTwoSteps.sol";
  */
 abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     // Address of the current owner
-    address private _owner;
+    address public owner;
 
     // Address of the potential owner
-    address private _potentialOwner;
+    address public potentialOwner;
+
+    // Delay for the timelock (in seconds)
+    uint256 public delay;
 
     // Earliest ownership renouncement timestamp
-    uint256 private _earliestOwnershipRenouncementTime;
+    uint256 public earliestOwnershipRenouncementTime;
 
     // Ownership status
     Status public status;
-
-    // Current delay for the timelock (in seconds)
-    uint256 public delay;
 
     /**
      * @notice Modifier to wrap functions for contracts that inherit this contract
      */
     modifier onlyOwner() {
-        if (msg.sender != _owner) {
+        if (msg.sender != owner) {
             revert NotOwner();
         }
         _;
@@ -36,10 +36,11 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
 
     /**
      * @notice Constructor
-     * @notice Initial owner is the deployment address while initial delay (for the timelock) must be set by contract that inherit from this.
+     *         Initial owner is the deployment address.
+     *         Delay (for the timelock) must be set by the contract that inherits from this.
      */
     constructor() {
-        _owner = msg.sender;
+        owner = msg.sender;
     }
 
     /**
@@ -51,9 +52,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
         if (status == Status.NoOngoingTransfer) revert NoOngoingTransferInProgress();
 
         if (status == Status.TransferInProgress) {
-            delete _potentialOwner;
+            delete potentialOwner;
         } else if (status == Status.RenouncementInProgress) {
-            delete _earliestOwnershipRenouncementTime;
+            delete earliestOwnershipRenouncementTime;
         }
 
         delete status;
@@ -66,10 +67,10 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      */
     function confirmOwnershipRenouncement() external onlyOwner {
         if (status != Status.RenouncementInProgress) revert RenouncementNotInProgress();
-        if (block.timestamp < _earliestOwnershipRenouncementTime) revert RenouncementTooEarly();
+        if (block.timestamp < earliestOwnershipRenouncementTime) revert RenouncementTooEarly();
 
-        delete _earliestOwnershipRenouncementTime;
-        delete _owner;
+        delete earliestOwnershipRenouncementTime;
+        delete owner;
         delete status;
 
         emit NewOwner(address(0));
@@ -81,13 +82,13 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      */
     function confirmOwnershipTransfer() external {
         if (status != Status.TransferInProgress) revert TransferNotInProgress();
-        if (msg.sender != _potentialOwner) revert WrongPotentialOwner();
+        if (msg.sender != potentialOwner) revert WrongPotentialOwner();
 
-        _owner = msg.sender;
+        owner = msg.sender;
         delete status;
-        delete _potentialOwner;
+        delete potentialOwner;
 
-        emit NewOwner(_owner);
+        emit NewOwner(owner);
     }
 
     /**
@@ -98,9 +99,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
         if (status != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
 
         status = Status.TransferInProgress;
-        _potentialOwner = newPotentialOwner;
+        potentialOwner = newPotentialOwner;
 
-        emit InitiateOwnershipTransfer(_owner, newPotentialOwner);
+        emit InitiateOwnershipTransfer(owner, newPotentialOwner);
     }
 
     /**
@@ -110,34 +111,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
         if (status != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
 
         status = Status.RenouncementInProgress;
-        _earliestOwnershipRenouncementTime = block.timestamp + delay;
+        earliestOwnershipRenouncementTime = block.timestamp + delay;
 
-        emit InitiateOwnershipRenouncement(_earliestOwnershipRenouncementTime);
-    }
-
-    /**
-     * @notice Returns owner address
-     * @return owner address
-     */
-    function owner() external view returns (address) {
-        return _owner;
-    }
-
-    /**
-     * @notice Returns potential owner address
-     * @return potential owner address
-     */
-    function potentialOwner() external view returns (address) {
-        return _potentialOwner;
-    }
-
-    /**
-     * @notice Returns the earliest timestamp after which the ownership renouncement
-     *         can be confirmed by the current owner.
-     * @return earliest timestamp for renouncement confirmation
-     */
-    function earliestOwnershipRenouncementTime() external view returns (uint256) {
-        return _earliestOwnershipRenouncementTime;
+        emit InitiateOwnershipRenouncement(earliestOwnershipRenouncementTime);
     }
 
     /**
