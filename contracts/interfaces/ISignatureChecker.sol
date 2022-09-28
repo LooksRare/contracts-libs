@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+/**
+ * @title ISignatureChecker
+ */
 interface ISignatureChecker {
     // Custom errors
     error BadSignatureS();

@@ -43,40 +43,30 @@ abstract contract SignatureChecker is ISignatureChecker {
             revert WrongSignatureLength(signature.length);
         }
 
-        // https://ethereum.stackexchange.com/questions/83174/is-it-best-practice-to-check-signature-malleability-in-ecrecover
-        // https://crypto.iacr.org/2019/affevents/wac/medias/Heninger-BiasedNonceSense.pdf
-        if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) {
-            revert BadSignatureS();
-        }
+        if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) revert BadSignatureS();
 
-        if (v != 27 && v != 28) {
-            revert BadSignatureV(v);
-        }
+        if (v != 27 && v != 28) revert BadSignatureV(v);
     }
 
     /**
      * @notice Recover the signer of a signature (for EOA)
-     * @param hash the hash of the signed message
-     * @param signature bytes containing the signature (64 or 65 bytes)
+     * @param hash Hash of the signed message
+     * @param signature Bytes containing the signature (64 or 65 bytes)
      */
-    function _recoverEOASigner(bytes32 hash, bytes memory signature) internal pure returns (address) {
+    function _recoverEOASigner(bytes32 hash, bytes memory signature) internal pure returns (address signer) {
         (bytes32 r, bytes32 s, uint8 v) = _splitSignature(signature);
 
         // If the signature is valid (and not malleable), return the signer address
-        address signer = ecrecover(hash, v, r, s);
+        signer = ecrecover(hash, v, r, s);
 
-        if (signer == address(0)) {
-            revert NullSignerAddress();
-        }
-
-        return signer;
+        if (signer == address(0)) revert NullSignerAddress();
     }
 
     /**
      * @notice Checks whether the signer is valid
-     * @param hash data hash
-     * @param signer the signer address (to confirm message validity)
-     * @param signature signature parameters encoded (v, r, s)
+     * @param hash Data hash
+     * @param signer Signer address (to confirm message validity)
+     * @param signature Signature parameters encoded (v, r, s)
      * @dev For EIP-712 signatures, the hash must be the digest (computed with signature hash and domain separator)
      */
     function _verify(
@@ -85,13 +75,9 @@ abstract contract SignatureChecker is ISignatureChecker {
         bytes memory signature
     ) internal view {
         if (signer.code.length == 0) {
-            if (_recoverEOASigner(hash, signature) != signer) {
-                revert InvalidSignatureEOA();
-            }
+            if (_recoverEOASigner(hash, signature) != signer) revert InvalidSignatureEOA();
         } else {
-            if (IERC1271(signer).isValidSignature(hash, signature) != 0x1626ba7e) {
-                revert InvalidSignatureERC1271();
-            }
+            if (IERC1271(signer).isValidSignature(hash, signature) != 0x1626ba7e) revert InvalidSignatureERC1271();
         }
     }
 }
