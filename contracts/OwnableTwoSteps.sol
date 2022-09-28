@@ -93,7 +93,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
 
     /**
      * @notice Initiate transfer of ownership to a new owner
-     * @param newPotentialOwner address of the new potential owner
+     * @param newPotentialOwner New potential owner address
      */
     function initiateOwnershipTransfer(address newPotentialOwner) external onlyOwner {
         if (status != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
@@ -118,8 +118,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
 
     /**
      * @notice Set up the timelock delay for renouncing ownership
-     * @param _delay timelock delay for the owner to confirm renouncing the ownership
+     * @param _delay Timelock delay for the owner to confirm renouncing the ownership
      * @dev This function is expected to be included in the constructor of the contract that inherits this contract.
+     *      If it is not set, there is no timelock to renounce the ownership.
      */
     function _setupDelayForRenouncingOwnership(uint256 _delay) internal {
         delay = _delay;

@@ -50,8 +50,8 @@ abstract contract SignatureChecker is ISignatureChecker {
 
     /**
      * @notice Recover the signer of a signature (for EOA)
-     * @param hash the hash of the signed message
-     * @param signature bytes containing the signature (64 or 65 bytes)
+     * @param hash Hash of the signed message
+     * @param signature Bytes containing the signature (64 or 65 bytes)
      */
     function _recoverEOASigner(bytes32 hash, bytes memory signature) internal pure returns (address signer) {
         (bytes32 r, bytes32 s, uint8 v) = _splitSignature(signature);
@@ -64,9 +64,9 @@ abstract contract SignatureChecker is ISignatureChecker {
 
     /**
      * @notice Checks whether the signer is valid
-     * @param hash data hash
-     * @param signer the signer address (to confirm message validity)
-     * @param signature signature parameters encoded (v, r, s)
+     * @param hash Data hash
+     * @param signer Signer address (to confirm message validity)
+     * @param signature Signature parameters encoded (v, r, s)
      * @dev For EIP-712 signatures, the hash must be the digest (computed with signature hash and domain separator)
      */
     function _verify(
