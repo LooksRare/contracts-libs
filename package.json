@@ -8,7 +8,9 @@
   "files": [
     "/abis/*.json",
     "/contracts/*.sol",
-    "/contracts/interfaces/*.sol"
+    "/contracts/interfaces/*.sol",
+    "/contracts/interfaces/generic/*.sol",
+    "/contracts/lowLevelCallers/*.sol"
   ],
   "keywords": [
     "looksrare",
