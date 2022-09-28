@@ -10329,6 +10329,11 @@ solidity-coverage@^0.7.21:
     shelljs "^0.8.3"
     web3-utils "^1.3.0"
 
+solmate@^6.6.1:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/solmate/-/solmate-6.6.1.tgz#f0907e1cdada6dd5fbfe11811ab545162b713197"
+  integrity sha512-WHvRXQvGtgR6R9nmkDTz/d+oULMqf/D33rlzQyadTX2SbuTmaW7ToEjGjGtWUVCQwZsZ/JP3vbOEVv7fB50btg==
+
 source-map-resolve@^0.5.0:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/source-map-resolve/-/source-map-resolve-0.5.3.tgz#190866bece7553e1f8f267a2ee82c606b5509a1a"
