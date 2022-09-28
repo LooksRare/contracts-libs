@@ -6,11 +6,16 @@ It also contains generic contract interfaces (for EIP/ERC) that can be used.
 
 ## Current contracts
 
-| Name             | Description                                                                                                 | Type     | Latest version |
-| ---------------- | ----------------------------------------------------------------------------------------------------------- | -------- | -------------- |
-| OwnableTwoSteps  | Contract for managing ownership of a smart contract. The transfer of ownership is done in a 2-step process. | Contract | 1.0.0          |
-| SignatureChecker | Contract for verifying the validity of a signature for EOA (64-byte, 65-byte signatures) and EIP-1271.      | Contract | 1.0.0          |
-| ReentrancyGuard  | Contract with a modifier to prevent reentrancy calls.                                                       | Contract | 1.0.0          |
+| Name             | Description                                                                                                                   | Type     | Latest version |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------- | -------------- |
+| OwnableTwoSteps  | Contract for managing ownership of a smart contract. The transfer of ownership is done in a 2-step process.                   | Contract | 2.0.0          |
+| SignatureChecker | Contract for verifying the validity of a signature for EOA (64-byte, 65-byte signatures) and EIP-1271.                        | Contract | 2.0.0          |
+| ReentrancyGuard  | Contract with a modifier to prevent reentrancy calls.                                                                         | Contract | 2.0.0          |
+| LowLevelETH      | Low-level call functions to transfer ETH or return ETH back to sender in a payable function                                   | Contract | 2.0.0          |
+| LowLevelWETH     | Low-level call functions to transfer ETH with an option to wrap to WETH if the original ETH transfer fails within a gas limit | Contract | 2.0.0          |
+| LowLevelERC20    | Low-level call functions for ERC20 functions                                                                                  | Contract | 2.0.0          |
+| LowLevelERC721   | Low-level call functions for ERC721 functions                                                                                 | Contract | 2.0.0          |
+| LowLevelERC1155  | Low-level call functions for ERC1155 functions                                                                                | Contract | 2.0.0          |
 
 ## About this repo
 
