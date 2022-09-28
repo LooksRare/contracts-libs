@@ -21,7 +21,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     // Earliest ownership renouncement timestamp
     uint256 public earliestOwnershipRenouncementTime;
 
-    // Ownership ownershipStatus
+    // Ownership status
     Status public ownershipStatus;
 
     /**

@@ -174,7 +174,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         vm.expectRevert(TransferAlreadyInProgress.selector);
         ownableTwoSteps.initiateOwnershipRenouncement();
 
-        // Reset ownershipStatus
+        // Reset ownership status
         ownableTwoSteps.cancelOwnershipTransfer();
 
         // 2. Cannot initiate renouncement/transfer to new owner after renouncement is initiated
