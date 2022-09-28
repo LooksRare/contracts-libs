@@ -26,7 +26,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
     function testConstructor() public {
         assertEq(ownableTwoSteps.owner(), _owner);
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
-        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.NoOngoingTransfer));
+        assertEq(uint8(ownableTwoSteps.ownershipStatus()), uint8(Status.NoOngoingTransfer));
         assertEq(ownableTwoSteps.delay(), _delay);
     }
 
@@ -39,7 +39,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         emit InitiateOwnershipTransfer(_owner, newOwner);
         ownableTwoSteps.initiateOwnershipTransfer(newOwner);
         assertEq(ownableTwoSteps.potentialOwner(), newOwner);
-        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.TransferInProgress));
+        assertEq(uint8(ownableTwoSteps.ownershipStatus()), uint8(Status.TransferInProgress));
 
         // 2. Accept ownership transfer
         vm.prank(newOwner);
@@ -48,7 +48,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         ownableTwoSteps.confirmOwnershipTransfer();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.owner(), newOwner);
-        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.NoOngoingTransfer));
+        assertEq(uint8(ownableTwoSteps.ownershipStatus()), uint8(Status.NoOngoingTransfer));
     }
 
     function testRenounceOwnership() public asPrankedUser(_owner) {
@@ -58,7 +58,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         ownableTwoSteps.initiateOwnershipRenouncement();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + _delay);
-        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.RenouncementInProgress));
+        assertEq(uint8(ownableTwoSteps.ownershipStatus()), uint8(Status.RenouncementInProgress));
 
         // 2. Confirm renouncement of ownership
         // Time travel
@@ -68,7 +68,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         ownableTwoSteps.confirmOwnershipRenouncement();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.owner(), address(0));
-        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.NoOngoingTransfer));
+        assertEq(uint8(ownableTwoSteps.ownershipStatus()), uint8(Status.NoOngoingTransfer));
     }
 
     function testCancelTransferOwnership() public asPrankedUser(_owner) {
@@ -79,7 +79,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         emit InitiateOwnershipTransfer(_owner, newOwner);
         ownableTwoSteps.initiateOwnershipTransfer(newOwner);
         assertEq(ownableTwoSteps.potentialOwner(), newOwner);
-        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.TransferInProgress));
+        assertEq(uint8(ownableTwoSteps.ownershipStatus()), uint8(Status.TransferInProgress));
 
         // 2. Cancel ownership transfer
         vm.expectEmit(false, false, false, true);
@@ -87,7 +87,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         ownableTwoSteps.cancelOwnershipTransfer();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.owner(), _owner);
-        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.NoOngoingTransfer));
+        assertEq(uint8(ownableTwoSteps.ownershipStatus()), uint8(Status.NoOngoingTransfer));
 
         // 3. Initiate ownership renouncement
         vm.expectEmit(false, false, false, true);
@@ -95,7 +95,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         ownableTwoSteps.initiateOwnershipRenouncement();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + _delay);
-        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.RenouncementInProgress));
+        assertEq(uint8(ownableTwoSteps.ownershipStatus()), uint8(Status.RenouncementInProgress));
 
         // 4. Cancel ownership renouncement
         vm.expectEmit(false, false, false, true);
@@ -103,7 +103,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         ownableTwoSteps.cancelOwnershipTransfer();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.owner(), _owner);
-        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.NoOngoingTransfer));
+        assertEq(uint8(ownableTwoSteps.ownershipStatus()), uint8(Status.NoOngoingTransfer));
     }
 
     function testWrongRecipientCannotClaim() public {
@@ -128,7 +128,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         ownableTwoSteps.initiateOwnershipRenouncement();
         assertEq(ownableTwoSteps.potentialOwner(), address(0));
         assertEq(ownableTwoSteps.earliestOwnershipRenouncementTime(), block.timestamp + _delay);
-        assertEq(uint8(ownableTwoSteps.status()), uint8(Status.RenouncementInProgress));
+        assertEq(uint8(ownableTwoSteps.ownershipStatus()), uint8(Status.RenouncementInProgress));
 
         // Time travel to 1 second prior to end of timelock
         vm.warp(ownableTwoSteps.earliestOwnershipRenouncementTime() - 1);
@@ -174,7 +174,7 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
         vm.expectRevert(TransferAlreadyInProgress.selector);
         ownableTwoSteps.initiateOwnershipRenouncement();
 
-        // Reset status
+        // Reset ownershipStatus
         ownableTwoSteps.cancelOwnershipTransfer();
 
         // 2. Cannot initiate renouncement/transfer to new owner after renouncement is initiated

@@ -21,8 +21,8 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     // Earliest ownership renouncement timestamp
     uint256 public earliestOwnershipRenouncementTime;
 
-    // Ownership status
-    Status public status;
+    // Ownership ownershipStatus
+    Status public ownershipStatus;
 
     /**
      * @notice Modifier to wrap functions for contracts that inherit this contract
@@ -49,15 +49,15 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      *      cancelling the renouncement of the ownership.
      */
     function cancelOwnershipTransfer() external onlyOwner {
-        if (status == Status.NoOngoingTransfer) revert NoOngoingTransferInProgress();
+        if (ownershipStatus == Status.NoOngoingTransfer) revert NoOngoingTransferInProgress();
 
-        if (status == Status.TransferInProgress) {
+        if (ownershipStatus == Status.TransferInProgress) {
             delete potentialOwner;
-        } else if (status == Status.RenouncementInProgress) {
+        } else if (ownershipStatus == Status.RenouncementInProgress) {
             delete earliestOwnershipRenouncementTime;
         }
 
-        delete status;
+        delete ownershipStatus;
 
         emit CancelOwnershipTransfer();
     }
@@ -66,12 +66,12 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      * @notice Confirm ownership renouncement
      */
     function confirmOwnershipRenouncement() external onlyOwner {
-        if (status != Status.RenouncementInProgress) revert RenouncementNotInProgress();
+        if (ownershipStatus != Status.RenouncementInProgress) revert RenouncementNotInProgress();
         if (block.timestamp < earliestOwnershipRenouncementTime) revert RenouncementTooEarly();
 
         delete earliestOwnershipRenouncementTime;
         delete owner;
-        delete status;
+        delete ownershipStatus;
 
         emit NewOwner(address(0));
     }
@@ -81,11 +81,11 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      * @dev This function can only be called by the current potential owner.
      */
     function confirmOwnershipTransfer() external {
-        if (status != Status.TransferInProgress) revert TransferNotInProgress();
+        if (ownershipStatus != Status.TransferInProgress) revert TransferNotInProgress();
         if (msg.sender != potentialOwner) revert WrongPotentialOwner();
 
         owner = msg.sender;
-        delete status;
+        delete ownershipStatus;
         delete potentialOwner;
 
         emit NewOwner(owner);
@@ -96,9 +96,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      * @param newPotentialOwner New potential owner address
      */
     function initiateOwnershipTransfer(address newPotentialOwner) external onlyOwner {
-        if (status != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
+        if (ownershipStatus != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
 
-        status = Status.TransferInProgress;
+        ownershipStatus = Status.TransferInProgress;
         potentialOwner = newPotentialOwner;
 
         emit InitiateOwnershipTransfer(owner, newPotentialOwner);
@@ -108,9 +108,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      * @notice Initiate ownership renouncement
      */
     function initiateOwnershipRenouncement() external onlyOwner {
-        if (status != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
+        if (ownershipStatus != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
 
-        status = Status.RenouncementInProgress;
+        ownershipStatus = Status.RenouncementInProgress;
         earliestOwnershipRenouncementTime = block.timestamp + delay;
 
         emit InitiateOwnershipRenouncement(earliestOwnershipRenouncementTime);
