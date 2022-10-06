@@ -28,7 +28,7 @@ abstract contract TestParameters {
     address internal _tetherTreasury = 0x5754284f345afc66a98fbB0a0Afe71e0F007B949; // Mainnet Tether treasury
     address internal _sender = _tetherTreasury;
     address internal _recipient = address(250);
-    uint256 internal _amount = 10_000 ether;
+    uint256 internal _amount = 10_000 * (10**6); // USDT has 6 decimals
 
     // Ankr RPC endpoint is public
     string internal _MAINNET_RPC_URL = "https://rpc.ankr.com/eth";
@@ -36,6 +36,8 @@ abstract contract TestParameters {
 
 interface IUSDT {
     function approve(address _spender, uint256 _value) external;
+
+    function transfer(address _to, uint256 _value) external;
 
     function balanceOf(address who) external view returns (uint256);
 
@@ -60,7 +62,7 @@ contract USDTLowLevelERC20Test is TestHelpers, TestParameters {
     }
 
     function testTransferUSDT() external asPrankedUser(_sender) {
-        IUSDT(_usdt).approve(address(lowLevelERC20), _amount);
+        IUSDT(_usdt).transfer(address(lowLevelERC20), _amount);
         lowLevelERC20.transferERC20(_usdt, _recipient, _amount);
         assertEq(IUSDT(_usdt).balanceOf(_recipient), _amount);
     }
