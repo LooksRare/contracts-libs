@@ -13,6 +13,10 @@ contract ImplementedLowLevelETH is LowLevelETH {
         _returnETHIfAny();
     }
 
+    function transferETHAndReturnFundsToSpecificAddress(address recipient) external payable {
+        _returnETHIfAny(recipient);
+    }
+
     function transferETHAndReturnFundsExceptOneWei() external payable {
         _returnETHIfAnyWithOneWeiLeft();
     }
@@ -42,6 +46,13 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
         vm.deal(_sender, amount);
         lowLevelETH.transferETHAndReturnFunds{value: amount}();
         assertEq(_sender.balance, amount);
+    }
+
+    function testTransferETHAndReturnFundsToSpecificAddress(uint112 amount) external payable asPrankedUser(_sender) {
+        vm.deal(_sender, amount);
+        assertEq(_recipient.balance, 0);
+        lowLevelETH.transferETHAndReturnFundsToSpecificAddress{value: amount}(_recipient);
+        assertEq(_recipient.balance, amount);
     }
 
     function testTransferETHAndReturnFundsExceptOneWei(uint112 amount) external payable asPrankedUser(_sender) {

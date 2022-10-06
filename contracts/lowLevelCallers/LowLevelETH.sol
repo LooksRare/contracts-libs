@@ -38,6 +38,17 @@ contract LowLevelETH {
     }
 
     /**
+     * @notice Return ETH back to the designated sender if any ETH is left in the payable call.
+     */
+    function _returnETHIfAny(address recipient) internal {
+        assembly {
+            if gt(selfbalance(), 0) {
+                let status := call(gas(), recipient, selfbalance(), 0, 0, 0, 0)
+            }
+        }
+    }
+
+    /**
      * @notice Return ETH to the original sender if any is left in the payable call but leave 1 wei of ETH in the contract.
      */
     function _returnETHIfAnyWithOneWeiLeft() internal {
