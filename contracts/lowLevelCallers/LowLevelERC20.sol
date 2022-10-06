@@ -14,10 +14,10 @@ contract LowLevelERC20 {
 
     /**
      * @notice Execute ERC20 transferFrom
-     * @param currency address of the currency
-     * @param from address of the sender
-     * @param to address of the recipient
-     * @param amount amount to transfer
+     * @param currency Currency address
+     * @param from Sender address
+     * @param to Recipient address
+     * @param amount Amount to transfer
      */
     function _executeERC20TransferFrom(
         address currency,
@@ -34,9 +34,9 @@ contract LowLevelERC20 {
 
     /**
      * @notice Execute ERC20 (direct) transfer
-     * @param currency address of the currency
-     * @param to address of the recipient
-     * @param amount amount to transfer
+     * @param currency Currency address
+     * @param to Recipient address
+     * @param amount Amount to transfer
      */
     function _executeERC20DirectTransfer(
         address currency,
@@ -44,6 +44,10 @@ contract LowLevelERC20 {
         uint256 amount
     ) internal {
         (bool status, bytes memory data) = currency.call(abi.encodeWithSelector(IERC20.transfer.selector, to, amount));
-        if (!status || data.length < 32 || !abi.decode(data, (bool))) revert ERC20TransferFail();
+        if (!status) revert ERC20TransferFail();
+
+        if (data.length > 0) {
+            if (!abi.decode(data, (bool))) revert ERC20TransferFail();
+        }
     }
 }
