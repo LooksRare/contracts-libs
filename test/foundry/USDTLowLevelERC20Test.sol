@@ -1,10 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {LowLevelERC20} from "../../contracts/lowLevelCallers/LowLevelERC20.sol";
+import {LowLevelERC20Approve} from "../../contracts/lowLevelCallers/LowLevelERC20Approve.sol";
+import {LowLevelERC20Transfer} from "../../contracts/lowLevelCallers/LowLevelERC20Transfer.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
-contract ImplementedLowLevelERC20 is LowLevelERC20 {
+contract ImplementedLowLevelERC20 is LowLevelERC20Approve, LowLevelERC20Transfer {
+    function approveERC20(
+        address currency,
+        address to,
+        uint256 amount
+    ) external {
+        _executeERC20Approve(currency, to, amount);
+    }
+
     function transferERC20(
         address currency,
         address to,
@@ -28,6 +37,7 @@ abstract contract TestParameters {
     address internal _tetherTreasury = 0x5754284f345afc66a98fbB0a0Afe71e0F007B949; // Mainnet Tether treasury
     address internal _sender = _tetherTreasury;
     address internal _recipient = address(250);
+    address internal _operator = address(69);
     uint256 internal _amount = 10_000 * (10**6); // USDT has 6 decimals
 
     // Ankr RPC endpoint is public
@@ -36,6 +46,8 @@ abstract contract TestParameters {
 
 interface IUSDT {
     function approve(address _spender, uint256 _value) external;
+
+    function allowance(address _owner, address _operator) external returns (uint256);
 
     function transfer(address _to, uint256 _value) external;
 
@@ -53,6 +65,11 @@ contract USDTLowLevelERC20Test is TestHelpers, TestParameters {
         _mainnetFork = vm.createFork(_MAINNET_RPC_URL);
         vm.selectFork(_mainnetFork);
         lowLevelERC20 = new ImplementedLowLevelERC20();
+    }
+
+    function testApproveUSDT() external {
+        lowLevelERC20.approveERC20(_usdt, _operator, _amount);
+        assertEq(IUSDT(_usdt).allowance(address(lowLevelERC20), _operator), _amount);
     }
 
     function testTransferFromUSDT() external asPrankedUser(_sender) {
