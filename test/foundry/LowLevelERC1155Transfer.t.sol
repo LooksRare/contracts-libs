@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {LowLevelERC1155} from "../../contracts/lowLevelCallers/LowLevelERC1155.sol";
+import {LowLevelERC1155Transfer} from "../../contracts/lowLevelCallers/LowLevelERC1155Transfer.sol";
 import {MockERC1155} from "../mock/MockERC1155.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
-contract ImplementedLowLevelERC1155 is LowLevelERC1155 {
+contract ImplementedLowLevelERC1155Transfer is LowLevelERC1155Transfer {
     function safeTransferFromERC1155(
         address collection,
         address from,
@@ -32,19 +32,19 @@ abstract contract TestParameters {
     address internal _recipient = address(101);
 }
 
-contract LowLevelERC1155Test is TestParameters, TestHelpers {
-    ImplementedLowLevelERC1155 public lowLevelERC1155;
+contract LowLevelERC1155TransferTest is TestParameters, TestHelpers {
+    ImplementedLowLevelERC1155Transfer public lowLevelERC1155Transfer;
     MockERC1155 public mockERC1155;
 
     function setUp() external {
-        lowLevelERC1155 = new ImplementedLowLevelERC1155();
+        lowLevelERC1155Transfer = new ImplementedLowLevelERC1155Transfer();
         mockERC1155 = new MockERC1155();
     }
 
     function testSafeTransferFromERC1155(uint256 tokenId, uint256 amount) external asPrankedUser(_sender) {
         mockERC1155.mint(_sender, tokenId, amount);
-        mockERC1155.setApprovalForAll(address(lowLevelERC1155), true);
-        lowLevelERC1155.safeTransferFromERC1155(address(mockERC1155), _sender, _recipient, tokenId, amount);
+        mockERC1155.setApprovalForAll(address(lowLevelERC1155Transfer), true);
+        lowLevelERC1155Transfer.safeTransferFromERC1155(address(mockERC1155), _sender, _recipient, tokenId, amount);
         assertEq(mockERC1155.balanceOf(_recipient, tokenId), amount);
     }
 
@@ -57,7 +57,7 @@ contract LowLevelERC1155Test is TestParameters, TestHelpers {
         uint256 tokenId1 = tokenId0 + 1;
         mockERC1155.mint(_sender, tokenId0, amount0);
         mockERC1155.mint(_sender, tokenId1, amount1);
-        mockERC1155.setApprovalForAll(address(lowLevelERC1155), true);
+        mockERC1155.setApprovalForAll(address(lowLevelERC1155Transfer), true);
 
         uint256[] memory amounts = new uint256[](2);
         amounts[0] = amount0;
@@ -67,7 +67,13 @@ contract LowLevelERC1155Test is TestParameters, TestHelpers {
         tokenIds[0] = tokenId0;
         tokenIds[1] = tokenId1;
 
-        lowLevelERC1155.safeBatchTransferFromERC1155(address(mockERC1155), _sender, _recipient, tokenIds, amounts);
+        lowLevelERC1155Transfer.safeBatchTransferFromERC1155(
+            address(mockERC1155),
+            _sender,
+            _recipient,
+            tokenIds,
+            amounts
+        );
         assertEq(mockERC1155.balanceOf(_recipient, tokenId0), amount0);
         assertEq(mockERC1155.balanceOf(_recipient, tokenId1), amount1);
     }

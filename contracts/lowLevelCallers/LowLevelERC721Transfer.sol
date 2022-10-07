@@ -4,11 +4,11 @@ pragma solidity ^0.8.14;
 import {IERC721} from "../interfaces/generic/IERC721.sol";
 
 /**
- * @title LowLevelERC721
+ * @title LowLevelERC721Transfer
  * @notice This contract contains low-level calls to transfer ERC721 tokens.
  * @author LooksRare protocol team (👀,💎)
  */
-contract LowLevelERC721 {
+contract LowLevelERC721Transfer {
     error ERC721TransferFromFail();
 
     /**
