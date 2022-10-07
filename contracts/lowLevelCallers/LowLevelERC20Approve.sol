@@ -5,7 +5,7 @@ import {IERC20} from "../interfaces/generic/IERC20.sol";
 
 /**
  * @title LowLevelERC20Approve
- * @notice This contract contains low-level calls to transfer ERC20 tokens.
+ * @notice This contract contains low-level calls to approve ERC20 tokens.
  * @author LooksRare protocol team (👀,💎)
  */
 contract LowLevelERC20Approve {
