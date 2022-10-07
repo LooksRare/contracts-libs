@@ -4,11 +4,11 @@ pragma solidity ^0.8.14;
 import {IERC1155} from "../interfaces/generic/IERC1155.sol";
 
 /**
- * @title LowLevelERC1155
+ * @title LowLevelERC1155Transfer
  * @notice This contract contains low-level calls to transfer ERC1155 tokens.
  * @author LooksRare protocol team (👀,💎)
  */
-contract LowLevelERC1155 {
+contract LowLevelERC1155Transfer {
     error ERC1155SafeTransferFromFail();
     error ERC1155SafeBatchTransferFrom();
 

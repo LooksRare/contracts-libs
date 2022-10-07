@@ -4,11 +4,11 @@ pragma solidity ^0.8.14;
 import {IERC20} from "../interfaces/generic/IERC20.sol";
 
 /**
- * @title LowLevelERC20
+ * @title LowLevelERC20Transfer
  * @notice This contract contains low-level calls to transfer ERC20 tokens.
  * @author LooksRare protocol team (👀,💎)
  */
-contract LowLevelERC20 {
+contract LowLevelERC20Transfer {
     error ERC20TransferFail();
     error ERC20TransferFromFail();
 
