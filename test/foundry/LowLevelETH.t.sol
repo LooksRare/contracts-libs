@@ -20,6 +20,10 @@ contract ImplementedLowLevelETH is LowLevelETH {
     function transferETHAndReturnFundsExceptOneWei() external payable {
         _returnETHIfAnyWithOneWeiLeft();
     }
+
+    function transferETHAndReturnFundsExceptOneWeiToSpecificAddress(address recipient) external payable {
+        _returnETHIfAnyWithOneWeiLeft(recipient);
+    }
 }
 
 abstract contract TestParameters {
@@ -64,6 +68,23 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
             assertEq(address(lowLevelETH).balance, 1);
         } else {
             assertEq(_sender.balance, 0);
+            assertEq(address(lowLevelETH).balance, amount);
+        }
+    }
+
+    function testTransferETHAndReturnFundsExceptOneWeiToSpecificAddress(uint112 amount)
+        external
+        payable
+        asPrankedUser(_sender)
+    {
+        vm.deal(_sender, amount);
+        lowLevelETH.transferETHAndReturnFundsExceptOneWeiToSpecificAddress{value: amount}(_recipient);
+
+        if (amount > 1) {
+            assertEq(_recipient.balance, amount - 1);
+            assertEq(address(lowLevelETH).balance, 1);
+        } else {
+            assertEq(_recipient.balance, 0);
             assertEq(address(lowLevelETH).balance, amount);
         }
     }
