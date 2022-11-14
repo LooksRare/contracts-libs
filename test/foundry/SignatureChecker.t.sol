@@ -19,11 +19,11 @@ abstract contract TestParameters is TestHelpers {
 }
 
 contract PublicSignatureChecker is SignatureChecker {
-    function recoverEOASigner(bytes32 hash, bytes memory signature) external pure returns (address) {
+    function recoverEOASigner(bytes32 hash, bytes calldata signature) external pure returns (address) {
         return _recoverEOASigner(hash, signature);
     }
 
-    function splitSignature(bytes memory signature)
+    function splitSignature(bytes calldata signature)
         external
         pure
         returns (
@@ -38,7 +38,7 @@ contract PublicSignatureChecker is SignatureChecker {
     function verify(
         bytes32 hash,
         address signer,
-        bytes memory signature
+        bytes calldata signature
     ) external view returns (bool) {
         // It reverts if wrong
         _verify(hash, signer, signature);
