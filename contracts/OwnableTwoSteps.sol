@@ -111,7 +111,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
         if (ownershipStatus != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
 
         ownershipStatus = Status.RenouncementInProgress;
-        earliestOwnershipRenouncementTime = block.timestamp + delay;
+        unchecked {
+            earliestOwnershipRenouncementTime = block.timestamp + delay;
+        }
 
         emit InitiateOwnershipRenouncement(earliestOwnershipRenouncementTime);
     }
