@@ -4,7 +4,7 @@ pragma solidity ^0.8.14;
 /**
  * @title IOwnableTwoSteps
  */
-contract IOwnableTwoSteps {
+interface IOwnableTwoSteps {
     enum Status {
         NoOngoingTransfer,
         TransferInProgress,
