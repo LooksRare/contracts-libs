@@ -2,6 +2,7 @@
 pragma solidity ^0.8.14;
 
 import {IERC20} from "../interfaces/generic/IERC20.sol";
+import {NotAContract} from "../Errors.sol";
 
 /**
  * @title LowLevelERC20Transfer
@@ -25,6 +26,8 @@ contract LowLevelERC20Transfer {
         address to,
         uint256 amount
     ) internal {
+        if (currency.code.length == 0) revert NotAContract();
+
         (bool status, bytes memory data) = currency.call(
             abi.encodeWithSelector(IERC20.transferFrom.selector, from, to, amount)
         );
@@ -46,6 +49,8 @@ contract LowLevelERC20Transfer {
         address to,
         uint256 amount
     ) internal {
+        if (currency.code.length == 0) revert NotAContract();
+
         (bool status, bytes memory data) = currency.call(abi.encodeWithSelector(IERC20.transfer.selector, to, amount));
 
         if (!status) revert ERC20TransferFail();

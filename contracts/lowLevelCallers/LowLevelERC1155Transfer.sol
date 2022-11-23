@@ -2,6 +2,7 @@
 pragma solidity ^0.8.14;
 
 import {IERC1155} from "../interfaces/generic/IERC1155.sol";
+import {NotAContract} from "../Errors.sol";
 
 /**
  * @title LowLevelERC1155Transfer
@@ -27,6 +28,8 @@ contract LowLevelERC1155Transfer {
         uint256 tokenId,
         uint256 amount
     ) internal {
+        if (collection.code.length == 0) revert NotAContract();
+
         (bool status, ) = collection.call(
             abi.encodeWithSelector(IERC1155.safeTransferFrom.selector, from, to, tokenId, amount, "")
         );
@@ -49,6 +52,8 @@ contract LowLevelERC1155Transfer {
         uint256[] calldata tokenIds,
         uint256[] calldata amounts
     ) internal {
+        if (collection.code.length == 0) revert NotAContract();
+
         (bool status, ) = collection.call(
             abi.encodeWithSelector(IERC1155.safeBatchTransferFrom.selector, from, to, tokenIds, amounts, "")
         );
