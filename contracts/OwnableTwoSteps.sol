@@ -49,11 +49,12 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      *      cancelling the renouncement of the ownership.
      */
     function cancelOwnershipTransfer() external onlyOwner {
-        if (ownershipStatus == Status.NoOngoingTransfer) revert NoOngoingTransferInProgress();
+        Status _ownershipStatus = ownershipStatus;
+        if (_ownershipStatus == Status.NoOngoingTransfer) revert NoOngoingTransferInProgress();
 
-        if (ownershipStatus == Status.TransferInProgress) {
+        if (_ownershipStatus == Status.TransferInProgress) {
             delete potentialOwner;
-        } else if (ownershipStatus == Status.RenouncementInProgress) {
+        } else if (_ownershipStatus == Status.RenouncementInProgress) {
             delete earliestOwnershipRenouncementTime;
         }
 
