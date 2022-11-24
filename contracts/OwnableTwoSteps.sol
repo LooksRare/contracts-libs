@@ -89,7 +89,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
         delete ownershipStatus;
         delete potentialOwner;
 
-        emit NewOwner(owner);
+        emit NewOwner(msg.sender);
     }
 
     /**
@@ -102,7 +102,11 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
         ownershipStatus = Status.TransferInProgress;
         potentialOwner = newPotentialOwner;
 
-        emit InitiateOwnershipTransfer(owner, newPotentialOwner);
+        /**
+         * @dev This function can only be called by the owner, so msg.sender is the owner.
+         *      We don't have to SLOAD the owner again.
+         */
+        emit InitiateOwnershipTransfer(msg.sender, newPotentialOwner);
     }
 
     /**
