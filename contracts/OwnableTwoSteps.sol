@@ -15,12 +15,6 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     // Address of the potential owner
     address public potentialOwner;
 
-    // Delay for the timelock (in seconds)
-    uint256 public delay;
-
-    // Earliest ownership renouncement timestamp
-    uint256 public earliestOwnershipRenouncementTime;
-
     // Ownership status
     Status public ownershipStatus;
 
@@ -37,7 +31,6 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     /**
      * @notice Constructor
      *         Initial owner is the deployment address.
-     *         Delay (for the timelock) must be set by the contract that inherits from this.
      */
     constructor() {
         owner = msg.sender;
@@ -54,8 +47,6 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
 
         if (_ownershipStatus == Status.TransferInProgress) {
             delete potentialOwner;
-        } else if (_ownershipStatus == Status.RenouncementInProgress) {
-            delete earliestOwnershipRenouncementTime;
         }
 
         delete ownershipStatus;
@@ -68,9 +59,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      */
     function confirmOwnershipRenouncement() external onlyOwner {
         if (ownershipStatus != Status.RenouncementInProgress) revert RenouncementNotInProgress();
-        if (block.timestamp < earliestOwnershipRenouncementTime) revert RenouncementTooEarly();
 
-        delete earliestOwnershipRenouncementTime;
         delete owner;
         delete ownershipStatus;
 
@@ -116,18 +105,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
         if (ownershipStatus != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
 
         ownershipStatus = Status.RenouncementInProgress;
-        earliestOwnershipRenouncementTime = block.timestamp + delay;
 
-        emit InitiateOwnershipRenouncement(earliestOwnershipRenouncementTime);
-    }
-
-    /**
-     * @notice Set up the timelock delay for renouncing ownership
-     * @param _delay Timelock delay for the owner to confirm renouncing the ownership
-     * @dev This function is expected to be included in the constructor of the contract that inherits this contract.
-     *      If it is not set, there is no timelock to renounce the ownership.
-     */
-    function _setupDelayForRenouncingOwnership(uint256 _delay) internal {
-        delay = _delay;
+        emit InitiateOwnershipRenouncement();
     }
 }
