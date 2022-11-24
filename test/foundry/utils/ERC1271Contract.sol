@@ -21,7 +21,7 @@ contract ERC1271Contract is IERC1271 {
     /**
      * @notice Verifies that the signer is the owner of the signing contract.
      */
-    function isValidSignature(bytes32 hash, bytes memory signature) external view override returns (bytes4) {
+    function isValidSignature(bytes32 hash, bytes calldata signature) external view override returns (bytes4) {
         uint8 v;
         bytes32 r;
         bytes32 s;
@@ -29,16 +29,16 @@ contract ERC1271Contract is IERC1271 {
         if (signature.length == 64) {
             bytes32 vs;
             assembly {
-                r := mload(add(signature, 0x20))
-                vs := mload(add(signature, 0x40))
+                r := calldataload(signature.offset)
+                vs := calldataload(add(signature.offset, 0x20))
                 s := and(vs, 0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)
                 v := add(shr(255, vs), 27)
             }
         } else if (signature.length == 65) {
             assembly {
-                r := mload(add(signature, 0x20))
-                s := mload(add(signature, 0x40))
-                v := byte(0, mload(add(signature, 0x60)))
+                r := calldataload(signature.offset)
+                s := calldataload(add(signature.offset, 0x20))
+                v := byte(0, calldataload(add(signature.offset, 0x40)))
             }
         } else {
             revert WrongSignatureLength(signature.length);

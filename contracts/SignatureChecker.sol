@@ -16,7 +16,7 @@ abstract contract SignatureChecker is ISignatureChecker {
      * @return s The s output of the signature
      * @return v The recovery identifier, must be 27 or 28
      */
-    function _splitSignature(bytes memory signature)
+    function _splitSignature(bytes calldata signature)
         internal
         pure
         returns (
@@ -28,16 +28,16 @@ abstract contract SignatureChecker is ISignatureChecker {
         if (signature.length == 64) {
             bytes32 vs;
             assembly {
-                r := mload(add(signature, 0x20))
-                vs := mload(add(signature, 0x40))
+                r := calldataload(signature.offset)
+                vs := calldataload(add(signature.offset, 0x20))
                 s := and(vs, 0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)
                 v := add(shr(255, vs), 27)
             }
         } else if (signature.length == 65) {
             assembly {
-                r := mload(add(signature, 0x20))
-                s := mload(add(signature, 0x40))
-                v := byte(0, mload(add(signature, 0x60)))
+                r := calldataload(signature.offset)
+                s := calldataload(add(signature.offset, 0x20))
+                v := byte(0, calldataload(add(signature.offset, 0x40)))
             }
         } else {
             revert WrongSignatureLength(signature.length);
@@ -53,7 +53,7 @@ abstract contract SignatureChecker is ISignatureChecker {
      * @param hash Hash of the signed message
      * @param signature Bytes containing the signature (64 or 65 bytes)
      */
-    function _recoverEOASigner(bytes32 hash, bytes memory signature) internal pure returns (address signer) {
+    function _recoverEOASigner(bytes32 hash, bytes calldata signature) internal pure returns (address signer) {
         (bytes32 r, bytes32 s, uint8 v) = _splitSignature(signature);
 
         // If the signature is valid (and not malleable), return the signer address
@@ -72,7 +72,7 @@ abstract contract SignatureChecker is ISignatureChecker {
     function _verify(
         bytes32 hash,
         address signer,
-        bytes memory signature
+        bytes calldata signature
     ) internal view {
         if (signer.code.length == 0) {
             if (_recoverEOASigner(hash, signature) != signer) revert InvalidSignatureEOA();
