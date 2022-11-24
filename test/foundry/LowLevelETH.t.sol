@@ -26,6 +26,28 @@ contract ImplementedLowLevelETH is LowLevelETH {
     }
 }
 
+contract AlwaysReject {
+    ImplementedLowLevelETH lowLevelETH;
+
+    error NoMeGustaDinero();
+
+    constructor(ImplementedLowLevelETH _lowLevelETH) {
+        lowLevelETH = _lowLevelETH;
+    }
+
+    function transferETHAndReturnFunds() external payable {
+        lowLevelETH.transferETHAndReturnFunds{value: msg.value}();
+    }
+
+    function transferETHAndReturnFundsExceptOneWei() external payable {
+        lowLevelETH.transferETHAndReturnFundsExceptOneWei{value: msg.value}();
+    }
+
+    receive() external payable {
+        revert NoMeGustaDinero();
+    }
+}
+
 abstract contract TestParameters {
     address internal _sender = address(100);
     address internal _recipient = address(101);
@@ -39,53 +61,99 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
         lowLevelETH = new ImplementedLowLevelETH();
     }
 
-    function testTransferETH(address randomSender, uint112 amount) external payable {
+    function testTransferETH(address randomSender, uint112 amount) external {
+        vm.assume(amount > 0);
         vm.deal(randomSender, amount);
         vm.prank(randomSender);
         lowLevelETH.transferETH{value: amount}(_recipient);
         assertEq(_recipient.balance, amount);
     }
 
-    function testTransferETHAndReturnFunds(uint112 amount) external payable asPrankedUser(_sender) {
+    function testTransferETHFail(address randomSender, uint112 amount) external {
+        // The test starts failing with OutOfFund when amount == 79228162514264337593543950336,
+        // some truncation issues.
+        vm.assume(amount < 79228162514264337593543950336);
+        vm.deal(randomSender, amount);
+        vm.prank(randomSender);
+        AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
+        vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
+        lowLevelETH.transferETH{value: amount}(address(alwaysReject));
+    }
+
+    function testTransferETHAndReturnFunds(uint112 amount) external asPrankedUser(_sender) {
+        vm.assume(amount > 0);
         vm.deal(_sender, amount);
         lowLevelETH.transferETHAndReturnFunds{value: amount}();
         assertEq(_sender.balance, amount);
     }
 
-    function testTransferETHAndReturnFundsToSpecificAddress(uint112 amount) external payable asPrankedUser(_sender) {
+    function testTransferETHAndReturnFundsFail(uint112 amount) external asPrankedUser(_sender) {
+        vm.deal(_sender, amount);
+        AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
+        vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
+        alwaysReject.transferETHAndReturnFunds{value: amount}();
+    }
+
+    function testTransferETHAndReturnFundsToSpecificAddress(uint112 amount) external asPrankedUser(_sender) {
+        vm.assume(amount > 0);
         vm.deal(_sender, amount);
         assertEq(_recipient.balance, 0);
         lowLevelETH.transferETHAndReturnFundsToSpecificAddress{value: amount}(_recipient);
         assertEq(_recipient.balance, amount);
     }
 
-    function testTransferETHAndReturnFundsExceptOneWei(uint112 amount) external payable asPrankedUser(_sender) {
+    function testTransferETHAndReturnFundsToSpecificAddressFail(uint112 amount) external asPrankedUser(_sender) {
         vm.deal(_sender, amount);
-        lowLevelETH.transferETHAndReturnFundsExceptOneWei{value: amount}();
+        AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
+        vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
+        lowLevelETH.transferETHAndReturnFundsToSpecificAddress{value: amount}(address(alwaysReject));
+    }
+
+    function testTransferETHAndReturnFundsExceptOneWei(uint112 amount) external asPrankedUser(_sender) {
+        vm.deal(_sender, amount);
 
         if (amount > 1) {
+            lowLevelETH.transferETHAndReturnFundsExceptOneWei{value: amount}();
             assertEq(_sender.balance, amount - 1);
             assertEq(address(lowLevelETH).balance, 1);
         } else {
-            assertEq(_sender.balance, 0);
-            assertEq(address(lowLevelETH).balance, amount);
+            vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
+            lowLevelETH.transferETHAndReturnFundsExceptOneWei{value: amount}();
         }
+    }
+
+    function testTransferETHAndReturnFundsExceptOneWeiFail(uint112 amount) external asPrankedUser(_sender) {
+        vm.assume(amount > 1);
+        vm.deal(_sender, amount);
+        AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
+        vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
+        alwaysReject.transferETHAndReturnFundsExceptOneWei{value: amount}();
     }
 
     function testTransferETHAndReturnFundsExceptOneWeiToSpecificAddress(uint112 amount)
         external
-        payable
         asPrankedUser(_sender)
     {
         vm.deal(_sender, amount);
-        lowLevelETH.transferETHAndReturnFundsExceptOneWeiToSpecificAddress{value: amount}(_recipient);
 
         if (amount > 1) {
+            lowLevelETH.transferETHAndReturnFundsExceptOneWeiToSpecificAddress{value: amount}(_recipient);
             assertEq(_recipient.balance, amount - 1);
             assertEq(address(lowLevelETH).balance, 1);
         } else {
-            assertEq(_recipient.balance, 0);
-            assertEq(address(lowLevelETH).balance, amount);
+            vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
+            lowLevelETH.transferETHAndReturnFundsExceptOneWeiToSpecificAddress{value: amount}(_recipient);
         }
+    }
+
+    function testTransferETHAndReturnFundsExceptOneWeiToSpecificAddressFail(uint112 amount)
+        external
+        asPrankedUser(_sender)
+    {
+        vm.assume(amount > 1);
+        vm.deal(_sender, amount);
+        AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
+        vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
+        lowLevelETH.transferETHAndReturnFundsExceptOneWeiToSpecificAddress{value: amount}(address(alwaysReject));
     }
 }
