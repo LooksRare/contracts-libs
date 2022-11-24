@@ -6,7 +6,8 @@ import {ISignatureChecker} from "./interfaces/ISignatureChecker.sol";
 
 /**
  * @title SignatureChecker
- * @notice This contract is used to verify signatures for EOAs (with length of both 65 and 64 bytes) and contracts (ERC-1271).
+ * @notice This contract is used to verify signatures for EOAs (with lengths of both 65 and 64 bytes) and contracts (ERC-1271).
+
  */
 abstract contract SignatureChecker is ISignatureChecker {
     /**
@@ -56,7 +57,7 @@ abstract contract SignatureChecker is ISignatureChecker {
     function _recoverEOASigner(bytes32 hash, bytes calldata signature) internal pure returns (address signer) {
         (bytes32 r, bytes32 s, uint8 v) = _splitSignature(signature);
 
-        // If the signature is valid (and not malleable), return the signer address
+        // If the signature is valid (and not malleable), return the signer's address
         signer = ecrecover(hash, v, r, s);
 
         if (signer == address(0)) revert NullSignerAddress();
