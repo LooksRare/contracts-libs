@@ -2,6 +2,7 @@
 pragma solidity ^0.8.14;
 
 import {IERC721} from "../interfaces/generic/IERC721.sol";
+import {NotAContract} from "../Errors.sol";
 
 /**
  * @title LowLevelERC721Transfer
@@ -24,6 +25,8 @@ contract LowLevelERC721Transfer {
         address to,
         uint256 tokenId
     ) internal {
+        if (collection.code.length == 0) revert NotAContract();
+
         (bool status, ) = collection.call(abi.encodeWithSelector(IERC721.transferFrom.selector, from, to, tokenId));
         if (!status) revert ERC721TransferFromFail();
     }
