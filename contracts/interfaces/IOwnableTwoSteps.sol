@@ -14,7 +14,6 @@ interface IOwnableTwoSteps {
     // Custom errors
     error NoOngoingTransferInProgress();
     error NotOwner();
-    error RenouncementTooEarly();
     error RenouncementNotInProgress();
     error TransferAlreadyInProgress();
     error TransferNotInProgress();
@@ -22,7 +21,7 @@ interface IOwnableTwoSteps {
 
     // Events
     event CancelOwnershipTransfer();
-    event InitiateOwnershipRenouncement(uint256 earliestOwnershipRenouncementTime);
+    event InitiateOwnershipRenouncement();
     event InitiateOwnershipTransfer(address previousOwner, address potentialOwner);
     event NewOwner(address newOwner);
 }
