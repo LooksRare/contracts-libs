@@ -77,9 +77,11 @@ abstract contract SignatureChecker is ISignatureChecker {
         bytes calldata signature
     ) internal view {
         if (signer.code.length == 0) {
-            if (_recoverEOASigner(hash, signature) != signer) revert InvalidSignatureEOA();
+            if (_recoverEOASigner(hash, signature) == signer) return;
+            revert InvalidSignatureEOA();
         } else {
-            if (IERC1271(signer).isValidSignature(hash, signature) != 0x1626ba7e) revert InvalidSignatureERC1271();
+            if (IERC1271(signer).isValidSignature(hash, signature) == 0x1626ba7e) return;
+            revert InvalidSignatureERC1271();
         }
     }
 }
