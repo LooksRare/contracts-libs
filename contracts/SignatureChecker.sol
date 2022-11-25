@@ -52,6 +52,7 @@ abstract contract SignatureChecker is ISignatureChecker {
      * @notice Recover the signer of a signature (for EOA)
      * @param hash Hash of the signed message
      * @param signature Bytes containing the signature (64 or 65 bytes)
+     * @param signer The address that signed the signature
      */
     function _recoverEOASigner(bytes32 hash, bytes calldata signature) internal pure returns (address signer) {
         (bytes32 r, bytes32 s, uint8 v) = _splitSignature(signature);
