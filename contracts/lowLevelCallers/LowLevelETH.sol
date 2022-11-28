@@ -82,29 +82,4 @@ contract LowLevelETH {
 
         if (!status) revert ETHTransferFail();
     }
-
-    /**
-     * @notice Return ETH to the designated recipient if any is left in the payable call but leave 1 wei of ETH in the contract.
-     * @param recipient Recipient address
-     * @dev It does not revert if self balance is equal to 1 or 0.
-     */
-    function _returnETHIfAnyWithOneWeiLeft(address recipient) internal {
-        bool status;
-
-
-        assembly {
-            let selfBalance := selfbalance()
-
-            if lt(selfBalance, 2) {
-                status := true
-            }
-
-            if eq(status, false) {
-                status := call(gas(), recipient, sub(selfBalance, 1), 0, 0, 0, 0)
-            }
-        }
-
-
-        if (!status) revert ETHTransferFail();
-    }
 }
