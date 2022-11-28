@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;
 
-import {IWETH} from "../interfaces/generic/IWETH.sol";
-
 /**
  * @title LowLevelETH
  * @notice This contract contains low-level calls to transfer ETH.
@@ -15,6 +13,7 @@ contract LowLevelETH {
      * @notice Transfer ETH to a recipient address
      * @param _to Recipient address
      * @param _amount Amount to transfer
+     * @dev It reverts if amount is equal to 0.
      */
     function _transferETH(address _to, uint256 _amount) internal {
         bool status;
@@ -28,14 +27,22 @@ contract LowLevelETH {
 
     /**
      * @notice Return ETH back to the original sender if any ETH is left in the payable call.
+     * @dev It does not revert if self balance is equal to 0.
      */
     function _returnETHIfAny() internal {
         bool status;
 
         assembly {
-            if gt(selfbalance(), 0) {
-                status := call(gas(), caller(), selfbalance(), 0, 0, 0, 0)
+            let selfBalance := selfbalance()
+            
+            switch selfBalance
+            case 0 {
+                status := true
             }
+            default {
+                status := call(gas(), caller(), selfBalance, 0, 0, 0, 0)
+            }
+           
         }
 
         if (!status) revert ETHTransferFail();
@@ -43,14 +50,23 @@ contract LowLevelETH {
 
     /**
      * @notice Return ETH back to the designated recipient if any ETH is left in the payable call.
+     * @param recipient Recipient address
+     * @dev It does not revert if self balance is equal to 0.
      */
     function _returnETHIfAny(address recipient) internal {
         bool status;
 
-        assembly {
-            if gt(selfbalance(), 0) {
-                status := call(gas(), recipient, selfbalance(), 0, 0, 0, 0)
+         assembly {
+            let selfBalance := selfbalance()
+
+            switch selfBalance
+            case 0 {
+                status := true
             }
+            default {
+                status := call(gas(), recipient, selfBalance, 0, 0, 0, 0)
+            }
+           
         }
 
         if (!status) revert ETHTransferFail();
@@ -58,13 +74,20 @@ contract LowLevelETH {
 
     /**
      * @notice Return ETH to the original sender if any is left in the payable call but leave 1 wei of ETH in the contract.
+     * @dev It does not revert if self balance is equal to 1 or 0.
      */
     function _returnETHIfAnyWithOneWeiLeft() internal {
         bool status;
 
         assembly {
-            if gt(selfbalance(), 1) {
-                status := call(gas(), caller(), sub(selfbalance(), 1), 0, 0, 0, 0)
+            let selfBalance := selfbalance()
+
+            if lt(selfBalance, 2) {
+                status := true
+            }
+
+            if eq(status, false) {
+                status := call(gas(), caller(), sub(selfBalance, 1), 0, 0, 0, 0)
             }
         }
 
@@ -73,15 +96,25 @@ contract LowLevelETH {
 
     /**
      * @notice Return ETH to the designated recipient if any is left in the payable call but leave 1 wei of ETH in the contract.
+     * @param recipient Recipient address
+     * @dev It does not revert if self balance is equal to 1 or 0.
      */
     function _returnETHIfAnyWithOneWeiLeft(address recipient) internal {
         bool status;
 
+        
         assembly {
-            if gt(selfbalance(), 1) {
-                status := call(gas(), recipient, sub(selfbalance(), 1), 0, 0, 0, 0)
+            let selfBalance := selfbalance()
+            
+            if lt(selfBalance, 2) {
+                status := true
+            }
+
+            if eq(status, false) {
+                status := call(gas(), recipient, sub(selfBalance, 1), 0, 0, 0, 0)
             }
         }
+        
 
         if (!status) revert ETHTransferFail();
     }

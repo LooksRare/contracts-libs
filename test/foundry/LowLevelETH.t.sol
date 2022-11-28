@@ -81,13 +81,13 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
     }
 
     function testTransferETHAndReturnFunds(uint112 amount) external asPrankedUser(_sender) {
-        vm.assume(amount > 0);
         vm.deal(_sender, amount);
         lowLevelETH.transferETHAndReturnFunds{value: amount}();
         assertEq(_sender.balance, amount);
     }
 
     function testTransferETHAndReturnFundsFail(uint112 amount) external asPrankedUser(_sender) {
+        vm.assume(amount > 0);
         vm.deal(_sender, amount);
         AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
         vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
@@ -103,6 +103,8 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
     }
 
     function testTransferETHAndReturnFundsToSpecificAddressFail(uint112 amount) external asPrankedUser(_sender) {
+        // It only fails if ETH is transferred and activates the fallback for the recipient so it needs to be greater than 1
+        vm.assume(amount > 1);
         vm.deal(_sender, amount);
         AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
         vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
@@ -117,8 +119,9 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
             assertEq(_sender.balance, amount - 1);
             assertEq(address(lowLevelETH).balance, 1);
         } else {
-            vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
             lowLevelETH.transferETHAndReturnFundsExceptOneWei{value: amount}();
+            assertEq(_sender.balance, 0);
+            assertEq(address(lowLevelETH).balance, amount);
         }
     }
 
@@ -141,8 +144,9 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
             assertEq(_recipient.balance, amount - 1);
             assertEq(address(lowLevelETH).balance, 1);
         } else {
-            vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
             lowLevelETH.transferETHAndReturnFundsExceptOneWeiToSpecificAddress{value: amount}(_recipient);
+            assertEq(_recipient.balance, 0);
+            assertEq(address(lowLevelETH).balance, amount);
         }
     }
 
