@@ -13,10 +13,6 @@ contract ImplementedLowLevelETH is LowLevelETH {
         _returnETHIfAny();
     }
 
-    function transferETHAndReturnFundsToSpecificAddress(address recipient) external payable {
-        _returnETHIfAny(recipient);
-    }
-
     function transferETHAndReturnFundsExceptOneWei() external payable {
         _returnETHIfAnyWithOneWeiLeft();
     }
@@ -88,23 +84,6 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
         AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
         vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
         alwaysReject.transferETHAndReturnFunds{value: amount}();
-    }
-
-    function testTransferETHAndReturnFundsToSpecificAddress(uint112 amount) external asPrankedUser(_sender) {
-        vm.assume(amount > 0);
-        vm.deal(_sender, amount);
-        assertEq(_recipient.balance, 0);
-        lowLevelETH.transferETHAndReturnFundsToSpecificAddress{value: amount}(_recipient);
-        assertEq(_recipient.balance, amount);
-    }
-
-    function testTransferETHAndReturnFundsToSpecificAddressFail(uint112 amount) external asPrankedUser(_sender) {
-        // It only fails if ETH is transferred and activates the fallback for the recipient so it needs to be greater than 1
-        vm.assume(amount > 1);
-        vm.deal(_sender, amount);
-        AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
-        vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
-        lowLevelETH.transferETHAndReturnFundsToSpecificAddress{value: amount}(address(alwaysReject));
     }
 
     function testTransferETHAndReturnFundsExceptOneWei(uint112 amount) external asPrankedUser(_sender) {
