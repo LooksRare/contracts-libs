@@ -30,19 +30,13 @@ contract LowLevelETH {
      * @dev It does not revert if self balance is equal to 0.
      */
     function _returnETHIfAny() internal {
-        bool status;
+        bool status = true;
 
         assembly {
             let selfBalance := selfbalance()
-            
-            switch selfBalance
-            case 0 {
-                status := true
-            }
-            default {
+            if gt(selfBalance, 0) {
                 status := call(gas(), caller(), selfBalance, 0, 0, 0, 0)
             }
-           
         }
 
         if (!status) revert ETHTransferFail();
@@ -66,7 +60,7 @@ contract LowLevelETH {
             default {
                 status := call(gas(), recipient, selfBalance, 0, 0, 0, 0)
             }
-           
+
         }
 
         if (!status) revert ETHTransferFail();
@@ -77,16 +71,11 @@ contract LowLevelETH {
      * @dev It does not revert if self balance is equal to 1 or 0.
      */
     function _returnETHIfAnyWithOneWeiLeft() internal {
-        bool status;
+        bool status = true;
 
         assembly {
             let selfBalance := selfbalance()
-
-            if lt(selfBalance, 2) {
-                status := true
-            }
-
-            if eq(status, false) {
+            if gt(selfBalance, 1) {
                 status := call(gas(), caller(), sub(selfBalance, 1), 0, 0, 0, 0)
             }
         }
@@ -102,10 +91,10 @@ contract LowLevelETH {
     function _returnETHIfAnyWithOneWeiLeft(address recipient) internal {
         bool status;
 
-        
+
         assembly {
             let selfBalance := selfbalance()
-            
+
             if lt(selfBalance, 2) {
                 status := true
             }
@@ -114,7 +103,7 @@ contract LowLevelETH {
                 status := call(gas(), recipient, sub(selfBalance, 1), 0, 0, 0, 0)
             }
         }
-        
+
 
         if (!status) revert ETHTransferFail();
     }
