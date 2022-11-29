@@ -43,30 +43,6 @@ contract LowLevelETH {
     }
 
     /**
-     * @notice Return ETH back to the designated recipient if any ETH is left in the payable call.
-     * @param recipient Recipient address
-     * @dev It does not revert if self balance is equal to 0.
-     */
-    function _returnETHIfAny(address recipient) internal {
-        bool status;
-
-         assembly {
-            let selfBalance := selfbalance()
-
-            switch selfBalance
-            case 0 {
-                status := true
-            }
-            default {
-                status := call(gas(), recipient, selfBalance, 0, 0, 0, 0)
-            }
-
-        }
-
-        if (!status) revert ETHTransferFail();
-    }
-
-    /**
      * @notice Return ETH to the original sender if any is left in the payable call but leave 1 wei of ETH in the contract.
      * @dev It does not revert if self balance is equal to 1 or 0.
      */
@@ -79,31 +55,6 @@ contract LowLevelETH {
                 status := call(gas(), caller(), sub(selfBalance, 1), 0, 0, 0, 0)
             }
         }
-
-        if (!status) revert ETHTransferFail();
-    }
-
-    /**
-     * @notice Return ETH to the designated recipient if any is left in the payable call but leave 1 wei of ETH in the contract.
-     * @param recipient Recipient address
-     * @dev It does not revert if self balance is equal to 1 or 0.
-     */
-    function _returnETHIfAnyWithOneWeiLeft(address recipient) internal {
-        bool status;
-
-
-        assembly {
-            let selfBalance := selfbalance()
-
-            if lt(selfBalance, 2) {
-                status := true
-            }
-
-            if eq(status, false) {
-                status := call(gas(), recipient, sub(selfBalance, 1), 0, 0, 0, 0)
-            }
-        }
-
 
         if (!status) revert ETHTransferFail();
     }
