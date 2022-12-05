@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {LowLevelERC20Transfer} from "../../contracts/lowLevelCallers/LowLevelERC20Transfer.sol";
-import {NotAContract} from "../../contracts/Errors.sol";
+import {NotAContract} from "../../contracts/errors/GenericErrors.sol";
 import {MockERC20} from "../mock/MockERC20.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
