@@ -8,7 +8,7 @@
   "files": [
     "/abis/*.json",
     "/contracts/*.sol",
-    "contracts/errors/*.sol",
+    "/contracts/errors/*.sol",
     "/contracts/interfaces/*.sol",
     "/contracts/interfaces/generic/*.sol",
     "/contracts/lowLevelCallers/*.sol"
