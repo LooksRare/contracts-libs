@@ -1,10 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {LowLevelETH} from "../../contracts/lowLevelCallers/LowLevelETH.sol";
+import {LowLevelETHTransfer} from "../../contracts/lowLevelCallers/LowLevelETHTransfer.sol";
+import {LowLevelETHReturnETHIfAny} from "../../contracts/lowLevelCallers/LowLevelETHReturnETHIfAny.sol";
+import {LowLevelETHReturnETHIfAnyExceptOneWei} from "../../contracts/lowLevelCallers/LowLevelETHReturnETHIfAnyExceptOneWei.sol";
+import "../../contracts/errors/ETHTransferFail.sol";
+
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
-contract ImplementedLowLevelETH is LowLevelETH {
+contract ImplementedLowLevelETH is
+    LowLevelETHTransfer,
+    LowLevelETHReturnETHIfAny,
+    LowLevelETHReturnETHIfAnyExceptOneWei
+{
     function transferETH(address _to) external payable {
         _transferETH(_to, msg.value);
     }
@@ -68,7 +76,7 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
         vm.deal(randomSender, amount);
         vm.prank(randomSender);
         AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
-        vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
+        vm.expectRevert(ETHTransferFail.selector);
         lowLevelETH.transferETH{value: amount}(address(alwaysReject));
     }
 
@@ -82,7 +90,7 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
         vm.assume(amount > 0);
         vm.deal(_sender, amount);
         AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
-        vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
+        vm.expectRevert(ETHTransferFail.selector);
         alwaysReject.transferETHAndReturnFunds{value: amount}();
     }
 
@@ -104,7 +112,7 @@ contract LowLevelETHTest is TestParameters, TestHelpers {
         vm.assume(amount > 1);
         vm.deal(_sender, amount);
         AlwaysReject alwaysReject = new AlwaysReject(lowLevelETH);
-        vm.expectRevert(LowLevelETH.ETHTransferFail.selector);
+        vm.expectRevert(ETHTransferFail.selector);
         alwaysReject.transferETHAndReturnFundsExceptOneWei{value: amount}();
     }
 }
