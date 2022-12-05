@@ -2,7 +2,7 @@
 pragma solidity ^0.8.14;
 
 import {IERC20} from "../interfaces/generic/IERC20.sol";
-import {NotAContract} from "../Errors.sol";
+import {NotAContract} from "../errors/GenericErrors.sol";
 
 /**
  * @title LowLevelERC20Transfer
