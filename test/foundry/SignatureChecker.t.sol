@@ -1,22 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;
 
-import {SignatureChecker} from "../../contracts/SignatureChecker.sol";
 import {ERC1271Contract} from "./utils/ERC1271Contract.sol";
+import {PublicSignatureChecker} from "./utils/PublicSignatureChecker.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 import "../../contracts/errors/SignatureCheckerErrors.sol";
-
-contract PublicSignatureChecker {
-    function verify(
-        bytes32 hash,
-        address signer,
-        bytes calldata signature
-    ) external view returns (bool) {
-        // It will revert if it is wrong
-        SignatureChecker.verify(hash, signer, signature);
-        return true;
-    }
-}
 
 abstract contract TestParameters is TestHelpers {
     // Generate two random private keys
