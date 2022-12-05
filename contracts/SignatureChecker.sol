@@ -38,8 +38,8 @@ library SignatureChecker {
      * @return s The s output of the signature
      * @return v The recovery identifier, must be 27 or 28
      */
-    function _splitSignature(bytes calldata signature)
-        private
+    function splitSignature(bytes calldata signature)
+        internal
         pure
         returns (
             bytes32 r,
@@ -77,7 +77,7 @@ library SignatureChecker {
      * @param signer The address that signed the signature
      */
     function _recoverEOASigner(bytes32 hash, bytes calldata signature) private pure returns (address signer) {
-        (bytes32 r, bytes32 s, uint8 v) = _splitSignature(signature);
+        (bytes32 r, bytes32 s, uint8 v) = splitSignature(signature);
 
         // If the signature is valid (and not malleable), return the signer's address
         signer = ecrecover(hash, v, r, s);
