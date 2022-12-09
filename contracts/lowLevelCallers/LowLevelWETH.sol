@@ -30,7 +30,7 @@ contract LowLevelWETH {
         }
 
         if (!status) {
-            IWETH(_WETH).deposit{value: _amount};
+            IWETH(_WETH).deposit{value: _amount}();
             IWETH(_WETH).transfer(_to, _amount);
         }
     }
