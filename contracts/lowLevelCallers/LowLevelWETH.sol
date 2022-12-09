@@ -10,9 +10,6 @@ import {IWETH} from "../interfaces/generic/IWETH.sol";
  * @author LooksRare protocol team (👀,💎)
  */
 contract LowLevelWETH {
-    error WETHDepositFail();
-    error WETHTransferFail();
-
     /**
      * @notice Transfer ETH to a recipient with a gas limit. If the original transfers fails, it wraps to WETH and transfer the WETH to recipient.
      * @param _WETH WETH address
@@ -33,10 +30,8 @@ contract LowLevelWETH {
         }
 
         if (!status) {
-            (status, ) = _WETH.call{value: _amount}(abi.encodeWithSelector(IWETH.deposit.selector));
-            if (!status) revert WETHDepositFail();
-            (status, ) = _WETH.call(abi.encodeWithSelector(IWETH.transfer.selector, _to, _amount));
-            if (!status) revert WETHTransferFail();
+            IWETH(_WETH).deposit{value: _amount}();
+            IWETH(_WETH).transfer(_to, _amount);
         }
     }
 }

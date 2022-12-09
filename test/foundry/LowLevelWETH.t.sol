@@ -9,16 +9,15 @@ contract ImplementedLowLevelWETH is LowLevelWETH {
     function transferETH(
         address _WETH,
         address _to,
-        uint256 _amount,
         uint256 _gasLimit
     ) external payable {
-        _transferETHAndWrapIfFailWithGasLimit(_WETH, _to, _amount, _gasLimit);
+        _transferETHAndWrapIfFailWithGasLimit(_WETH, _to, msg.value, _gasLimit);
     }
 }
 
 abstract contract TestParameters {
     address internal _sender = address(100);
-    uint256 internal _GAS_LIMIT = 10000;
+    uint256 internal _GAS_LIMIT = 10_000;
 }
 
 contract RecipientFallback {
@@ -43,9 +42,9 @@ contract LowLevelWETHTest is TestParameters, TestHelpers {
         weth = new WETH();
     }
 
-    function testTransferETH(uint256 amount) external payable asPrankedUser(_sender) {
+    function testTransferETHAndRevertsinWETH(uint256 amount) external payable asPrankedUser(_sender) {
         vm.deal(_sender, amount);
-        lowLevelWETH.transferETH{value: amount}(address(weth), address(recipientFallback), amount, _GAS_LIMIT);
+        lowLevelWETH.transferETH{value: amount}(address(weth), address(recipientFallback), _GAS_LIMIT);
         assertEq(address(recipientFallback).balance, 0);
         assertEq(weth.balanceOf(address(recipientFallback)), amount);
     }
