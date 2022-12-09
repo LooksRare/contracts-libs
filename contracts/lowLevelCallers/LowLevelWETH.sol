@@ -33,10 +33,8 @@ contract LowLevelWETH {
         }
 
         if (!status) {
-            (status, ) = _WETH.call{value: _amount}(abi.encodeWithSelector(IWETH.deposit.selector));
-            if (!status) revert WETHDepositFail();
-            (status, ) = _WETH.call(abi.encodeWithSelector(IWETH.transfer.selector, _to, _amount));
-            if (!status) revert WETHTransferFail();
+            IWETH(_WETH).deposit{value: _amount};
+            IWETH(_WETH).transfer(_to, _amount);
         }
     }
 }
