@@ -42,7 +42,7 @@ contract LowLevelWETHTest is TestParameters, TestHelpers {
         weth = new WETH();
     }
 
-    function testTransferETHAndRevertsinWETH(uint256 amount) external asPrankedUser(_sender) {
+    function testTransferETHAndRevertsinWETH(uint256 amount) external payable asPrankedUser(_sender) {
         vm.deal(_sender, amount);
         lowLevelWETH.transferETH{value: amount}(address(weth), address(recipientFallback), _GAS_LIMIT);
         assertEq(address(recipientFallback).balance, 0);
