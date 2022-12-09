@@ -22,9 +22,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      * @notice Modifier to wrap functions for contracts that inherit this contract
      */
     modifier onlyOwner() {
-        if (msg.sender != owner) {
-            revert NotOwner();
-        }
+        _onlyOwner();
         _;
     }
 
@@ -107,5 +105,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
         ownershipStatus = Status.RenouncementInProgress;
 
         emit InitiateOwnershipRenouncement();
+    }
+
+    function _onlyOwner() private view {
+        if (msg.sender != owner) revert NotOwner();
     }
 }
