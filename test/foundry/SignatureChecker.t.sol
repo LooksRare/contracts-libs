@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.14;
+pragma solidity ^0.8.17;
 
 import {ERC1271Contract} from "./utils/ERC1271Contract.sol";
 import {PublicSignatureChecker} from "./utils/PublicSignatureChecker.sol";

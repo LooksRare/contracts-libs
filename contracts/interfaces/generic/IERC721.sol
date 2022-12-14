@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 interface IERC721 {
     event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 import {WETH} from "solmate/src/tokens/WETH.sol";
 import {LowLevelWETH} from "../../contracts/lowLevelCallers/LowLevelWETH.sol";

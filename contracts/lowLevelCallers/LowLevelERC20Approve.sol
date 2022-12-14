@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.14;
+pragma solidity ^0.8.17;
 
 import {IERC20} from "../interfaces/generic/IERC20.sol";
 import {NotAContract} from "../errors/GenericErrors.sol";

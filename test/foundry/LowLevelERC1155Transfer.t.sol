@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 import {LowLevelERC1155Transfer} from "../../contracts/lowLevelCallers/LowLevelERC1155Transfer.sol";
 import {NotAContract} from "../../contracts/errors/GenericErrors.sol";
