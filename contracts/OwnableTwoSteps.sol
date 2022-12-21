@@ -28,10 +28,10 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
 
     /**
      * @notice Constructor
-     *         Initial owner is the deployment address.
+     * @param _owner The contract's owner
      */
-    constructor() {
-        owner = msg.sender;
+    constructor(address _owner) {
+        owner = _owner;
     }
 
     /**

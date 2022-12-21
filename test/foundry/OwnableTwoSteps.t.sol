@@ -9,7 +9,9 @@ abstract contract TestParameters {
     address internal _owner = address(42);
 }
 
-contract ImplementedOwnableTwoSteps is OwnableTwoSteps {}
+contract ImplementedOwnableTwoSteps is TestParameters, OwnableTwoSteps {
+    constructor() OwnableTwoSteps(_owner) {}
+}
 
 contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
     ImplementedOwnableTwoSteps public ownableTwoSteps;
