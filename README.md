@@ -1,22 +1,24 @@
 # @looksrare/contracts-libs
 
-This repository contains a set of Solidity contracts that can be used across contracts for purposes such as verifying signatures, protecting contracts against reentrancy attacks, and a library for managing the ownership of a contract.
+This repository contains a set of Solidity contracts that can be used across contracts for purposes such as verifying signatures, protecting contracts against reentrancy attacks, low-level call functions, and a library for managing the ownership of a contract.
 
 It also contains generic contract interfaces (for EIP/ERC) that can be used.
 
 ## Current contracts
 
-| Name                    | Description                                                                                                                   | Type     | Latest version |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------- | -------------- |
-| OwnableTwoSteps         | Contract for managing ownership of a smart contract. The transfer of ownership is done in a 2-step process.                   | Contract | 2.0.0          |
-| SignatureChecker        | Contract for verifying the validity of a signature for EOA (64-byte, 65-byte signatures) and EIP-1271.                        | Contract | 2.0.0          |
-| ReentrancyGuard         | Contract with a modifier to prevent reentrancy calls.                                                                         | Contract | 2.0.0          |
-| LowLevelETH             | Low-level call functions to transfer ETH or return ETH back to sender in a payable function                                   | Contract | 2.0.0          |
-| LowLevelWETH            | Low-level call functions to transfer ETH with an option to wrap to WETH if the original ETH transfer fails within a gas limit | Contract | 2.0.0          |
-| LowLevelERC20Approve    | Low-level call functions for ERC20 approve functions                                                                          | Contract | 2.0.0          |
-| LowLevelERC20Transfer   | Low-level call functions for ERC20 transfer functions                                                                         | Contract | 2.0.0          |
-| LowLevelERC721Transfer  | Low-level call functions for ERC721 functions                                                                                 | Contract | 2.0.0          |
-| LowLevelERC1155Transfer | Low-level call functions for ERC1155 functions                                                                                | Contract | 2.0.0          |
+| Name                                  | Description                                                                                                                   | Type     | Latest version |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------- | -------------- |
+| OwnableTwoSteps                       | Contract for managing ownership of a smart contract. The transfer of ownership is done in a 2-step process.                   | Contract | 2.5.0          |
+| SignatureChecker                      | Contract for verifying the validity of a signature for EOA (64-byte, 65-byte signatures) and EIP-1271.                        | Contract | 2.4.4          |
+| ReentrancyGuard                       | Contract with a modifier to prevent reentrancy calls.                                                                         | Contract | 2.4.4          |
+| LowLevelETHTransfer                   | Low-level call function to transfer ETH                                                                                       | Contract | 2.4.4          |
+| LowLevelETHReturnETHIfAny             | Low-level call function to return all ETH left                                                                                | Contract | 2.4.4          |
+| LowLevelETHReturnETHIfAnyExceptOneWei | Low-level call function to return all ETH left except one wei                                                                 | Contract | 2.4.4          |
+| LowLevelWETH                          | Low-level call functions to transfer ETH with an option to wrap to WETH if the original ETH transfer fails within a gas limit | Contract | 2.4.4          |
+| LowLevelERC20Approve                  | Low-level call functions for ERC20 approve functions                                                                          | Contract | 2.4.4          |
+| LowLevelERC20Transfer                 | Low-level call functions for ERC20 transfer functions                                                                         | Contract | 2.4.4          |
+| LowLevelERC721Transfer                | Low-level call functions for ERC721 functions                                                                                 | Contract | 2.4.4          |
+| LowLevelERC1155Transfer               | Low-level call functions for ERC1155 functions                                                                                | Contract | 2.4.4          |
 
 ## About this repo
 
