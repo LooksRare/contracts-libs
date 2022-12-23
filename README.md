@@ -1,5 +1,8 @@
 # @looksrare/contracts-libs
 
+[![Tests](https://github.com/LooksRare/contracts-libs/actions/workflows/tests.yaml/badge.svg)](https://github.com/LooksRare/contracts-libs/actions/workflows/tests.yaml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 This repository contains a set of Solidity contracts that can be used across contracts for purposes such as verifying signatures, protecting contracts against reentrancy attacks, low-level call functions, and a library for managing the ownership of a contract.
 
 It also contains generic contract interfaces (for EIP/ERC) that can be used.
