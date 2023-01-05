@@ -3,70 +3,13 @@ pragma solidity ^0.8.17;
 
 import {PackableReentrancyGuard, IReentrancyGuard} from "../../contracts/PackableReentrancyGuard.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
-
-abstract contract Faucet {
-    error AlreadyClaimed();
-
-    mapping(address => bool) internal _hasClaimed;
-
-    function claim() external virtual;
-
-    function _claim() internal {
-        if (_hasClaimed[msg.sender]) {
-            revert AlreadyClaimed();
-        }
-
-        bool status;
-        address to = msg.sender;
-        uint256 amount = 0.01 ether;
-
-        assembly {
-            status := call(gas(), to, amount, 0, 0, 0, 0)
-            // returndatacopy(t, f, s)
-            // copy s bytes from returndata at position f to mem at position t
-            returndatacopy(0, 0, returndatasize())
-            switch status
-            case 0 {
-                // revert(p, s)
-                // end execution, revert state changes, return data mem[p…(p+s))
-                revert(0, returndatasize())
-            }
-        }
-
-        _hasClaimed[msg.sender] = true;
-    }
-}
-
-contract UnsafeFaucet is Faucet {
-    function claim() external override {
-        _claim();
-    }
-}
+import {Faucet} from "./utils/reentrancy/Faucet.sol";
+import {UnsafeFaucet} from "./utils/reentrancy/UnsafeFaucet.sol";
+import {ReentrancyCaller} from "./utils/reentrancy/ReentrancyCaller.sol";
 
 contract SafeFaucet is Faucet, PackableReentrancyGuard {
     function claim() external override nonReentrant {
         _claim();
-    }
-}
-
-contract ReentrancyCaller {
-    uint256 private _counter;
-    Faucet public faucet;
-
-    constructor(address _faucet) {
-        faucet = Faucet(_faucet);
-    }
-
-    receive() external payable {
-        if (_counter++ < 5) {
-            faucet.claim();
-        }
-    }
-
-    function claim() external {
-        faucet.claim();
-        // reset counter
-        _counter = 0;
     }
 }
 
