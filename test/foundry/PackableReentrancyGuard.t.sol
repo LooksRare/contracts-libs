@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {ReentrancyGuard, IReentrancyGuard} from "../../contracts/ReentrancyGuard.sol";
+import {PackableReentrancyGuard, IReentrancyGuard} from "../../contracts/PackableReentrancyGuard.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 import {Faucet} from "./utils/reentrancy/Faucet.sol";
 import {UnsafeFaucet} from "./utils/reentrancy/UnsafeFaucet.sol";
 import {ReentrancyCaller} from "./utils/reentrancy/ReentrancyCaller.sol";
 
-contract SafeFaucet is Faucet, ReentrancyGuard {
+contract SafeFaucet is Faucet, PackableReentrancyGuard {
     function claim() external override nonReentrant {
         _claim();
     }
