@@ -14,6 +14,7 @@ It also contains generic contract interfaces (for EIP/ERC) that can be used.
 | OwnableTwoSteps                       | Contract for managing ownership of a smart contract. The transfer of ownership is done in a 2-step process.                   | Contract | 2.5.0          |
 | SignatureChecker                      | Contract for verifying the validity of a signature for EOA (64-byte, 65-byte signatures) and EIP-1271.                        | Contract | 2.4.4          |
 | ReentrancyGuard                       | Contract with a modifier to prevent reentrancy calls.                                                                         | Contract | 2.4.4          |
+| PackedReentrancyGuard                 | Contract with a modifier to prevent reentrancy calls. Adapted from ReentrancyGuard.                                           | Contract | 2.5.1          |
 | LowLevelETHTransfer                   | Low-level call function to transfer ETH                                                                                       | Contract | 2.4.4          |
 | LowLevelETHReturnETHIfAny             | Low-level call function to return all ETH left                                                                                | Contract | 2.4.4          |
 | LowLevelETHReturnETHIfAnyExceptOneWei | Low-level call function to return all ETH left except one wei                                                                 | Contract | 2.4.4          |
