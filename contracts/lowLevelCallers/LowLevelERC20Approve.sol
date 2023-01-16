@@ -25,7 +25,7 @@ contract LowLevelERC20Approve {
     ) internal {
         if (currency.code.length == 0) revert NotAContract();
 
-        (bool status, bytes memory data) = currency.call(abi.encodeWithSelector(IERC20.approve.selector, to, amount));
+        (bool status, bytes memory data) = currency.call(abi.encodeCall(IERC20.approve, (to, amount)));
 
         if (!status) revert ERC20ApprovalFail();
         if (data.length > 0) {

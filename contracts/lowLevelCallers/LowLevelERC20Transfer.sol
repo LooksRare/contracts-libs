@@ -28,9 +28,7 @@ contract LowLevelERC20Transfer {
     ) internal {
         if (currency.code.length == 0) revert NotAContract();
 
-        (bool status, bytes memory data) = currency.call(
-            abi.encodeWithSelector(IERC20.transferFrom.selector, from, to, amount)
-        );
+        (bool status, bytes memory data) = currency.call(abi.encodeCall(IERC20.transferFrom, (from, to, amount)));
 
         if (!status) revert ERC20TransferFromFail();
         if (data.length > 0) {
@@ -51,7 +49,7 @@ contract LowLevelERC20Transfer {
     ) internal {
         if (currency.code.length == 0) revert NotAContract();
 
-        (bool status, bytes memory data) = currency.call(abi.encodeWithSelector(IERC20.transfer.selector, to, amount));
+        (bool status, bytes memory data) = currency.call(abi.encodeCall(IERC20.transfer, (to, amount)));
 
         if (!status) revert ERC20TransferFail();
         if (data.length > 0) {

@@ -30,9 +30,7 @@ contract LowLevelERC1155Transfer {
     ) internal {
         if (collection.code.length == 0) revert NotAContract();
 
-        (bool status, ) = collection.call(
-            abi.encodeWithSelector(IERC1155.safeTransferFrom.selector, from, to, tokenId, amount, "")
-        );
+        (bool status, ) = collection.call(abi.encodeCall(IERC1155.safeTransferFrom, (from, to, tokenId, amount, "")));
 
         if (!status) revert ERC1155SafeTransferFromFail();
     }
@@ -55,7 +53,7 @@ contract LowLevelERC1155Transfer {
         if (collection.code.length == 0) revert NotAContract();
 
         (bool status, ) = collection.call(
-            abi.encodeWithSelector(IERC1155.safeBatchTransferFrom.selector, from, to, tokenIds, amounts, "")
+            abi.encodeCall(IERC1155.safeBatchTransferFrom, (from, to, tokenIds, amounts, ""))
         );
 
         if (!status) revert ERC1155SafeBatchTransferFrom();
