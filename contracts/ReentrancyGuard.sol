@@ -16,7 +16,9 @@ abstract contract ReentrancyGuard is IReentrancyGuard {
      * @notice Modifier to wrap functions to prevent reentrancy calls.
      */
     modifier nonReentrant() {
-        if (_status == 2) revert ReentrancyFail();
+        if (_status == 2) {
+            revert ReentrancyFail();
+        }
 
         _status = 2;
         _;

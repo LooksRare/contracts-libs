@@ -29,11 +29,15 @@ contract LowLevelERC1155Transfer {
         uint256 tokenId,
         uint256 amount
     ) internal {
-        if (collection.code.length == 0) revert NotAContract();
+        if (collection.code.length == 0) {
+            revert NotAContract();
+        }
 
         (bool status, ) = collection.call(abi.encodeCall(IERC1155.safeTransferFrom, (from, to, tokenId, amount, "")));
 
-        if (!status) revert ERC1155SafeTransferFromFail();
+        if (!status) {
+            revert ERC1155SafeTransferFromFail();
+        }
     }
 
     /**
@@ -51,12 +55,16 @@ contract LowLevelERC1155Transfer {
         uint256[] calldata tokenIds,
         uint256[] calldata amounts
     ) internal {
-        if (collection.code.length == 0) revert NotAContract();
+        if (collection.code.length == 0) {
+            revert NotAContract();
+        }
 
         (bool status, ) = collection.call(
             abi.encodeCall(IERC1155.safeBatchTransferFrom, (from, to, tokenIds, amounts, ""))
         );
 
-        if (!status) revert ERC1155SafeBatchTransferFrom();
+        if (!status) {
+            revert ERC1155SafeBatchTransferFrom();
+        }
     }
 }

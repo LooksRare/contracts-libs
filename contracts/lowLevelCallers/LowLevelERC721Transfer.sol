@@ -27,9 +27,14 @@ contract LowLevelERC721Transfer {
         address to,
         uint256 tokenId
     ) internal {
-        if (collection.code.length == 0) revert NotAContract();
+        if (collection.code.length == 0) {
+            revert NotAContract();
+        }
 
         (bool status, ) = collection.call(abi.encodeCall(IERC721.transferFrom, (from, to, tokenId)));
-        if (!status) revert ERC721TransferFromFail();
+
+        if (!status) {
+            revert ERC721TransferFromFail();
+        }
     }
 }
