@@ -33,6 +33,13 @@ contract SignatureCheckerTest is TestHelpers, TestParameters {
         assertTrue(signatureChecker.verify(hashedMessage, user1, signature));
     }
 
+    function testSignEOAEIP2098() public {
+        bytes memory signature = _eip2098Signature(_signMessage(_message, privateKeyUser1));
+        bytes32 hashedMessage = _computeHash(_message);
+
+        assertTrue(signatureChecker.verify(hashedMessage, user1, signature));
+    }
+
     function testSignERC1271() public {
         ERC1271Contract erc1271Contract = new ERC1271Contract(user1);
         bytes memory signature = _signMessage(_message, privateKeyUser1);
@@ -55,6 +62,16 @@ contract SignatureCheckerTest is TestHelpers, TestParameters {
 
         bytes32 hashedMessage = _computeHash(_message);
         vm.expectRevert(InvalidSignatureEOA.selector);
+        signatureChecker.verify(hashedMessage, user1, signature);
+    }
+
+    function testCannotSignIfWrongSignatureLength(uint256 length) public {
+        // Getting OutOfGas starting from 16,776,985, probably due to memory cost
+        vm.assume(length != 64 && length != 65 && length < 16_776_985);
+        bytes memory signature = new bytes(length);
+
+        bytes32 hashedMessage = _computeHash(_message);
+        vm.expectRevert(abi.encodeWithSelector(WrongSignatureLength.selector, length));
         signatureChecker.verify(hashedMessage, user1, signature);
     }
 }
