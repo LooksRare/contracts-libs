@@ -17,6 +17,8 @@ contract OwnableTwoStepsTest is TestParameters, TestHelpers, IOwnableTwoSteps {
     ImplementedOwnableTwoSteps public ownableTwoSteps;
 
     function setUp() public asPrankedUser(_owner) {
+        vm.expectEmit(true, false, false, true);
+        emit NewOwner(_owner);
         ownableTwoSteps = new ImplementedOwnableTwoSteps();
     }
 
