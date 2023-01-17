@@ -11,7 +11,8 @@ import {ETHTransferFail} from "../errors/LowLevelErrors.sol";
  */
 contract LowLevelETHReturnETHIfAnyExceptOneWei {
     /**
-     * @notice Return ETH to the original sender if any is left in the payable call but leave 1 wei of ETH in the contract.
+     * @notice It returns ETH to the original sender if any is left in the payable call
+     *         but this leaves 1 wei of ETH in the contract.
      * @dev It does not revert if self balance is equal to 1 or 0.
      */
     function _returnETHIfAnyWithOneWeiLeft() internal {

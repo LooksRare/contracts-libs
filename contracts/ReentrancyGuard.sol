@@ -12,10 +12,6 @@ import {IReentrancyGuard} from "./interfaces/IReentrancyGuard.sol";
 abstract contract ReentrancyGuard is IReentrancyGuard {
     uint256 private _status;
 
-    constructor() {
-        _status = 1;
-    }
-
     /**
      * @notice Modifier to wrap functions to prevent reentrancy calls.
      */
@@ -24,6 +20,10 @@ abstract contract ReentrancyGuard is IReentrancyGuard {
 
         _status = 2;
         _;
+        _status = 1;
+    }
+
+    constructor() {
         _status = 1;
     }
 }

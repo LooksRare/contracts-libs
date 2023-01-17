@@ -6,7 +6,8 @@ import "./errors/SignatureCheckerErrors.sol";
 
 /**
  * @title SignatureChecker
- * @notice This library is used to verify signatures for EOAs (with lengths of both 65 and 64 bytes) and contracts (ERC1271).
+ * @notice This library is used to verify signatures for EOAs (with lengths of both 65 and 64 bytes)
+ *         and contracts (ERC1271).
  */
 library SignatureChecker {
     /**
