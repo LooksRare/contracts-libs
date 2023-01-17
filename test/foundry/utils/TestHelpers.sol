@@ -20,7 +20,7 @@ abstract contract TestHelpers is Test {
 
     /**
      * @dev Transforms a standard signature into an EIP-2098 compliant signature
-     * @param signature The secp256k1 64/65-bytes signature
+     * @param signature The secp256k1 65-bytes signature
      * @return eip2098Signature The 64-bytes EIP-2098 compliant signature
      */
     function _eip2098Signature(bytes memory signature) internal pure returns (bytes memory eip2098Signature) {
