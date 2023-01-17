@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "../errors/ETHTransferFail.sol";
+// Low-level errors
+import {ETHTransferFail} from "../errors/LowLevelErrors.sol";
 
 /**
  * @title LowLevelETHTransfer

@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+// Interfaces
 import {IERC20} from "../interfaces/generic/IERC20.sol";
+
+// Errors
+import {ERC20TransferFail, ERC20TransferFromFail} from "../errors/LowLevelErrors.sol";
 import {NotAContract} from "../errors/GenericErrors.sol";
 
 /**
@@ -10,9 +14,6 @@ import {NotAContract} from "../errors/GenericErrors.sol";
  * @author LooksRare protocol team (👀,💎)
  */
 contract LowLevelERC20Transfer {
-    error ERC20TransferFail();
-    error ERC20TransferFromFail();
-
     /**
      * @notice Execute ERC20 transferFrom
      * @param currency Currency address

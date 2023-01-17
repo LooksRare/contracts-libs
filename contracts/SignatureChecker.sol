@@ -6,12 +6,11 @@ import "./errors/SignatureCheckerErrors.sol";
 
 /**
  * @title SignatureChecker
- * @notice This library is used to verify signatures for EOAs (with lengths of both 65 and 64 bytes) and contracts (ERC-1271).
-
+ * @notice This library is used to verify signatures for EOAs (with lengths of both 65 and 64 bytes) and contracts (ERC1271).
  */
 library SignatureChecker {
     /**
-     * @notice Checks whether the signer is valid
+     * @notice This function verifies whether the signer is valid for a hash and raw signature.
      * @param hash Data hash
      * @param signer Signer address (to confirm message validity)
      * @param signature Signature parameters encoded (v, r, s)
@@ -32,7 +31,7 @@ library SignatureChecker {
     }
 
     /**
-     * @notice Split a signature into r,s,v outputs
+     * @notice This function is internal and splits a signature into r, s, v outputs.
      * @param signature A 64 or 65 bytes signature
      * @return r The r output of the signature
      * @return s The s output of the signature
@@ -71,7 +70,7 @@ library SignatureChecker {
     }
 
     /**
-     * @notice Recover the signer of a signature (for EOA)
+     * @notice This function is private and recovers the signer of a signature (for EOA only).
      * @param hash Hash of the signed message
      * @param signature Bytes containing the signature (64 or 65 bytes)
      * @param signer The address that signed the signature
