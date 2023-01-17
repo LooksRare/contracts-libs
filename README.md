@@ -55,3 +55,21 @@ npx prettier '**/*.{json,sol,md}' --write
 npx solhint 'contracts/**/*.sol'
 npx solhint 'contracts/**/*.sol' --fix
 ```
+
+### Coverage
+
+It is required to install lcov.
+
+```shell
+brew install lcov
+```
+
+To run the coverage report, the below command can be executed.
+
+```
+forge coverage --report lcov
+LCOV_EXCLUDE=("test/*" "contracts/interfaces/*" "contracts/errors/*.sol")
+echo $LCOV_EXCLUDE | xargs lcov --output-file lcov-filtered.info --remove lcov.info
+genhtml lcov-filtered.info --output-directory out
+open out/index.html
+```
