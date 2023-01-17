@@ -29,14 +29,6 @@ abstract contract TestHelpers is Test {
         eip2098Signature[32] = bytes1(parityBit);
     }
 
-    function _signMessage64Bytes(bytes32 message, uint256 _key) internal returns (bytes memory) {
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(_key, keccak256(abi.encodePacked(message)));
-        bytes32 vs = bytes32(uint256(v));
-        vs << 255;
-        vs |= s;
-        return abi.encodePacked(r, vs);
-    }
-
     function _computeHash(bytes32 message) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked(message));
     }
