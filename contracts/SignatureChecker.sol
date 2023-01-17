@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+// Interfaces
 import {IERC1271} from "./interfaces/generic/IERC1271.sol";
-import "./errors/SignatureCheckerErrors.sol";
+
+// Errors
+import {BadSignatureS, BadSignatureV, InvalidSignatureERC1271, InvalidSignatureEOA, NullSignerAddress, WrongSignatureLength} from "./errors/SignatureCheckerErrors.sol";
 
 /**
  * @title SignatureChecker
