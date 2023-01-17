@@ -40,6 +40,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      */
     constructor(address _owner) {
         owner = _owner;
+        emit NewOwner(_owner);
     }
 
     /**
