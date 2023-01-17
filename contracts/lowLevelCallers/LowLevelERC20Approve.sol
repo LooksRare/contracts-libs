@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+// Interfaces
 import {IERC20} from "../interfaces/generic/IERC20.sol";
+
+// Errors
+import {ERC20ApprovalFail} from "../errors/LowLevelErrors.sol";
 import {NotAContract} from "../errors/GenericErrors.sol";
 
 /**
@@ -10,8 +14,6 @@ import {NotAContract} from "../errors/GenericErrors.sol";
  * @author LooksRare protocol team (👀,💎)
  */
 contract LowLevelERC20Approve {
-    error ERC20ApprovalFail();
-
     /**
      * @notice Execute ERC20 approve
      * @param currency Currency address

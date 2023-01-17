@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 import {LowLevelETHTransfer} from "../../contracts/lowLevelCallers/LowLevelETHTransfer.sol";
 import {LowLevelETHReturnETHIfAny} from "../../contracts/lowLevelCallers/LowLevelETHReturnETHIfAny.sol";
 import {LowLevelETHReturnETHIfAnyExceptOneWei} from "../../contracts/lowLevelCallers/LowLevelETHReturnETHIfAnyExceptOneWei.sol";
-import "../../contracts/errors/ETHTransferFail.sol";
+import {ETHTransferFail} from "../../contracts/errors/LowLevelErrors.sol";
 
 import {TestHelpers} from "./utils/TestHelpers.sol";
 

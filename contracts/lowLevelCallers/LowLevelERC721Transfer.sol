@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+// Interfaces
 import {IERC721} from "../interfaces/generic/IERC721.sol";
+
+// Errors
+import {ERC721TransferFromFail} from "../errors/LowLevelErrors.sol";
 import {NotAContract} from "../errors/GenericErrors.sol";
 
 /**
@@ -10,8 +14,6 @@ import {NotAContract} from "../errors/GenericErrors.sol";
  * @author LooksRare protocol team (👀,💎)
  */
 contract LowLevelERC721Transfer {
-    error ERC721TransferFromFail();
-
     /**
      * @notice Execute ERC721 transferFrom
      * @param collection Address of the collection

@@ -1,9 +1,12 @@
 {
   "extends": "solhint:recommended",
   "rules": {
+    "code-complexity": ["warn", 7],
     "compiler-version": ["error", "^0.8.17"],
-    "func-visibility": [{ "ignoreConstructors": true }],
+    "func-visibility": ["warn", { "ignoreConstructors": true }],
     "func-name-mixedcase": "off",
+    "max-line-length": ["error", 120],
+    "ordering": "warn",
     "reason-string": "off",
     "var-name-mixedcase": "off"
   }

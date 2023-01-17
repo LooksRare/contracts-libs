@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+// Interfaces
 import {IERC1155} from "../interfaces/generic/IERC1155.sol";
+
+// Errors
+import {ERC1155SafeTransferFromFail, ERC1155SafeBatchTransferFrom} from "../errors/LowLevelErrors.sol";
 import {NotAContract} from "../errors/GenericErrors.sol";
 
 /**
@@ -10,9 +14,6 @@ import {NotAContract} from "../errors/GenericErrors.sol";
  * @author LooksRare protocol team (👀,💎)
  */
 contract LowLevelERC1155Transfer {
-    error ERC1155SafeTransferFromFail();
-    error ERC1155SafeBatchTransferFrom();
-
     /**
      * @notice Execute ERC1155 safeTransferFrom
      * @param collection Address of the collection

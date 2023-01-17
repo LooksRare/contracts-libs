@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+// Interfaces
 import {IWETH} from "../interfaces/generic/IWETH.sol";
 
 /**
@@ -11,7 +12,8 @@ import {IWETH} from "../interfaces/generic/IWETH.sol";
  */
 contract LowLevelWETH {
     /**
-     * @notice Transfer ETH to a recipient with a gas limit. If the original transfers fails, it wraps to WETH and transfer the WETH to recipient.
+     * @notice It transfers ETH to a recipient with a specified gas limit.
+     *         If the original transfers fails, it wraps to WETH and transfers the WETH to recipient.
      * @param _WETH WETH address
      * @param _to Recipient address
      * @param _amount Amount to transfer

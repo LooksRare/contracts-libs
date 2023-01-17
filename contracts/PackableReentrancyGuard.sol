@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+// Interfaces
 import {IReentrancyGuard} from "./interfaces/IReentrancyGuard.sol";
 
 /**
@@ -14,18 +15,18 @@ import {IReentrancyGuard} from "./interfaces/IReentrancyGuard.sol";
 abstract contract PackableReentrancyGuard is IReentrancyGuard {
     uint8 private _status;
 
-    constructor() {
-        _status = 1;
-    }
-
     /**
-     * @notice Modifier to wrap functions to prevent reentrancy calls
+     * @notice Modifier to wrap functions to prevent reentrancy calls.
      */
     modifier nonReentrant() {
         if (_status == 2) revert ReentrancyFail();
 
         _status = 2;
         _;
+        _status = 1;
+    }
+
+    constructor() {
         _status = 1;
     }
 }

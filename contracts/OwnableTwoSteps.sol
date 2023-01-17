@@ -1,25 +1,33 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+// Interfaces
 import {IOwnableTwoSteps} from "./interfaces/IOwnableTwoSteps.sol";
 
 /**
  * @title OwnableTwoSteps
- * @notice This contract offers transfer of ownership in two steps with potential owner having to confirm the transaction.
- *         Renouncement of the ownership is also a two-step process with a timelock since the next potential owner is address(0).
+ * @notice This contract offers transfer of ownership in two steps with potential owner
+ *         having to confirm the transaction to become the owner.
+ *         Renouncement of the ownership is also a two-step process since the next potential owner is the address(0).
  */
 abstract contract OwnableTwoSteps is IOwnableTwoSteps {
-    // Address of the current owner
+    /**
+     * @notice Address of the current owner.
+     */
     address public owner;
 
-    // Address of the potential owner
+    /**
+     * @notice Address of the potential owner.
+     */
     address public potentialOwner;
 
-    // Ownership status
+    /**
+     * @notice Ownership status.
+     */
     Status public ownershipStatus;
 
     /**
-     * @notice Modifier to wrap functions for contracts that inherit this contract
+     * @notice Modifier to wrap functions for contracts that inherit this contract.
      */
     modifier onlyOwner() {
         _onlyOwner();
@@ -35,7 +43,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     }
 
     /**
-     * @notice Cancel transfer of ownership
+     * @notice This function is used to cancel the ownership transfer.
      * @dev This function can be used for both cancelling a transfer to a new owner and
      *      cancelling the renouncement of the ownership.
      */
@@ -53,7 +61,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     }
 
     /**
-     * @notice Confirm ownership renouncement
+     * @notice This function is used to confirm the ownership renouncement.
      */
     function confirmOwnershipRenouncement() external onlyOwner {
         if (ownershipStatus != Status.RenouncementInProgress) revert RenouncementNotInProgress();
@@ -65,7 +73,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     }
 
     /**
-     * @notice Confirm ownership transfer
+     * @notice This function is used to confirm the ownership transfer.
      * @dev This function can only be called by the current potential owner.
      */
     function confirmOwnershipTransfer() external {
@@ -80,7 +88,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     }
 
     /**
-     * @notice Initiate transfer of ownership to a new owner
+     * @notice This function is used to initiate the transfer of ownership to a new owner.
      * @param newPotentialOwner New potential owner address
      */
     function initiateOwnershipTransfer(address newPotentialOwner) external onlyOwner {
@@ -97,7 +105,7 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     }
 
     /**
-     * @notice Initiate ownership renouncement
+     * @notice This function is used to initiate the ownership renouncement.
      */
     function initiateOwnershipRenouncement() external onlyOwner {
         if (ownershipStatus != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
