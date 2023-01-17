@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-// Low-level errors
-import {ETHTransferFail} from "../errors/LowLevelErrors.sol";
+// Assembly constants
+import {ETHTransferFail_error_selector, ETHTransferFail_error_length, Error_selector_offset} from "../errors/AssemblyConstants.sol";
 
 /**
  * @title LowLevelETHReturnETHIfAnyExceptOneWei
@@ -16,15 +16,15 @@ contract LowLevelETHReturnETHIfAnyExceptOneWei {
      * @dev It does not revert if self balance is equal to 1 or 0.
      */
     function _returnETHIfAnyWithOneWeiLeft() internal {
-        bool status = true;
-
         assembly {
             let selfBalance := selfbalance()
             if gt(selfBalance, 1) {
-                status := call(gas(), caller(), sub(selfBalance, 1), 0, 0, 0, 0)
+                let status := call(gas(), caller(), sub(selfBalance, 1), 0, 0, 0, 0)
+                if iszero(status) {
+                    mstore(0x00, ETHTransferFail_error_selector)
+                    revert(Error_selector_offset, ETHTransferFail_error_length)
+                }
             }
         }
-
-        if (!status) revert ETHTransferFail();
     }
 }
