@@ -50,7 +50,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      */
     function cancelOwnershipTransfer() external onlyOwner {
         Status _ownershipStatus = ownershipStatus;
-        if (_ownershipStatus == Status.NoOngoingTransfer) revert NoOngoingTransferInProgress();
+        if (_ownershipStatus == Status.NoOngoingTransfer) {
+            revert NoOngoingTransferInProgress();
+        }
 
         if (_ownershipStatus == Status.TransferInProgress) {
             delete potentialOwner;
@@ -65,7 +67,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      * @notice This function is used to confirm the ownership renouncement.
      */
     function confirmOwnershipRenouncement() external onlyOwner {
-        if (ownershipStatus != Status.RenouncementInProgress) revert RenouncementNotInProgress();
+        if (ownershipStatus != Status.RenouncementInProgress) {
+            revert RenouncementNotInProgress();
+        }
 
         delete owner;
         delete ownershipStatus;
@@ -78,8 +82,13 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      * @dev This function can only be called by the current potential owner.
      */
     function confirmOwnershipTransfer() external {
-        if (ownershipStatus != Status.TransferInProgress) revert TransferNotInProgress();
-        if (msg.sender != potentialOwner) revert WrongPotentialOwner();
+        if (ownershipStatus != Status.TransferInProgress) {
+            revert TransferNotInProgress();
+        }
+
+        if (msg.sender != potentialOwner) {
+            revert WrongPotentialOwner();
+        }
 
         owner = msg.sender;
         delete ownershipStatus;
@@ -93,7 +102,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      * @param newPotentialOwner New potential owner address
      */
     function initiateOwnershipTransfer(address newPotentialOwner) external onlyOwner {
-        if (ownershipStatus != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
+        if (ownershipStatus != Status.NoOngoingTransfer) {
+            revert TransferAlreadyInProgress();
+        }
 
         ownershipStatus = Status.TransferInProgress;
         potentialOwner = newPotentialOwner;
@@ -109,7 +120,9 @@ abstract contract OwnableTwoSteps is IOwnableTwoSteps {
      * @notice This function is used to initiate the ownership renouncement.
      */
     function initiateOwnershipRenouncement() external onlyOwner {
-        if (ownershipStatus != Status.NoOngoingTransfer) revert TransferAlreadyInProgress();
+        if (ownershipStatus != Status.NoOngoingTransfer) {
+            revert TransferAlreadyInProgress();
+        }
 
         ownershipStatus = Status.RenouncementInProgress;
 

@@ -25,13 +25,20 @@ contract LowLevelERC20Approve {
         address to,
         uint256 amount
     ) internal {
-        if (currency.code.length == 0) revert NotAContract();
+        if (currency.code.length == 0) {
+            revert NotAContract();
+        }
 
         (bool status, bytes memory data) = currency.call(abi.encodeCall(IERC20.approve, (to, amount)));
 
-        if (!status) revert ERC20ApprovalFail();
+        if (!status) {
+            revert ERC20ApprovalFail();
+        }
+
         if (data.length > 0) {
-            if (!abi.decode(data, (bool))) revert ERC20ApprovalFail();
+            if (!abi.decode(data, (bool))) {
+                revert ERC20ApprovalFail();
+            }
         }
     }
 }

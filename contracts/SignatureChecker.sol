@@ -68,16 +68,20 @@ library SignatureChecker {
             revert WrongSignatureLength(signature.length);
         }
 
-        if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) revert BadSignatureS();
+        if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) {
+            revert BadSignatureS();
+        }
 
-        if (v != 27 && v != 28) revert BadSignatureV(v);
+        if (v != 27 && v != 28) {
+            revert BadSignatureV(v);
+        }
     }
 
     /**
      * @notice This function is private and recovers the signer of a signature (for EOA only).
      * @param hash Hash of the signed message
      * @param signature Bytes containing the signature (64 or 65 bytes)
-     * @param signer The address that signed the signature
+     * @return signer The address that signed the signature
      */
     function _recoverEOASigner(bytes32 hash, bytes calldata signature) private pure returns (address signer) {
         (bytes32 r, bytes32 s, uint8 v) = splitSignature(signature);

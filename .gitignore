@@ -14,3 +14,6 @@ abis/
 
 # Others 
 lib
+.gas-snapshot
+lcov*
+out/
