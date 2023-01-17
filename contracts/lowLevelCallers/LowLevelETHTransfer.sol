@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-// Low-level errors
-import {ETHTransferFail} from "../errors/LowLevelErrors.sol";
+// Assembly constants
+import {ETHTransferFail_error_selector, ETHTransferFail_error_length, Error_selector_offset} from "../errors/AssemblyConstants.sol";
 
 /**
  * @title LowLevelETHTransfer
@@ -11,18 +11,19 @@ import {ETHTransferFail} from "../errors/LowLevelErrors.sol";
  */
 contract LowLevelETHTransfer {
     /**
-     * @notice Transfer ETH to a recipient address
+     * @notice It transfers ETH to a recipient address.
      * @param _to Recipient address
      * @param _amount Amount to transfer
      * @dev It reverts if amount is equal to 0.
      */
     function _transferETH(address _to, uint256 _amount) internal {
-        bool status;
-
         assembly {
-            status := call(gas(), _to, _amount, 0, 0, 0, 0)
-        }
+            let status := call(gas(), _to, _amount, 0, 0, 0, 0)
 
-        if (!status) revert ETHTransferFail();
+            if iszero(status) {
+                mstore(0x00, ETHTransferFail_error_selector)
+                revert(Error_selector_offset, ETHTransferFail_error_length)
+            }
+        }
     }
 }
