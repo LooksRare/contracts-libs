@@ -3,7 +3,9 @@ pragma solidity ^0.8.17;
 
 import {LowLevelERC721Transfer} from "../../contracts/lowLevelCallers/LowLevelERC721Transfer.sol";
 import {NotAContract} from "../../contracts/errors/GenericErrors.sol";
+import {ERC721TransferFromFail} from "../../contracts/errors/LowLevelErrors.sol";
 import {MockERC721} from "../mock/MockERC721.sol";
+import {MockERC1155} from "../mock/MockERC1155.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
 contract ImplementedLowLevelERC721Transfer is LowLevelERC721Transfer {
@@ -41,5 +43,14 @@ contract LowLevelERC721TransferTest is TestParameters, TestHelpers {
     function testTransferFromERC721NotAContract(uint256 tokenId) external asPrankedUser(_sender) {
         vm.expectRevert(NotAContract.selector);
         lowLevelERC721Transfer.transferERC721(address(0), _sender, _recipient, tokenId);
+    }
+
+    function testTransferFromERC721WithERC1155Fails(uint256 tokenId) external asPrankedUser(_sender) {
+        MockERC1155 mockERC1155 = new MockERC1155();
+        mockERC1155.mint(_sender, tokenId, 1);
+        mockERC1155.setApprovalForAll(address(lowLevelERC721Transfer), true);
+
+        vm.expectRevert(ERC721TransferFromFail.selector);
+        lowLevelERC721Transfer.transferERC721(address(mockERC1155), _sender, _recipient, tokenId);
     }
 }

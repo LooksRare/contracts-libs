@@ -3,7 +3,9 @@ pragma solidity ^0.8.17;
 
 import {LowLevelERC20Transfer} from "../../contracts/lowLevelCallers/LowLevelERC20Transfer.sol";
 import {NotAContract} from "../../contracts/errors/GenericErrors.sol";
+import {ERC20ApprovalFail, ERC20TransferFail, ERC20TransferFromFail} from "../../contracts/errors/LowLevelErrors.sol";
 import {MockERC20} from "../mock/MockERC20.sol";
+import {MockERC1155} from "../mock/MockERC1155.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
 contract ImplementedLowLevelERC20Transfer is LowLevelERC20Transfer {
@@ -60,5 +62,17 @@ contract LowLevelERC20TransferTest is TestHelpers, TestParameters {
     function testTransferERC20NotAContract(uint256 amount) external asPrankedUser(_sender) {
         vm.expectRevert(NotAContract.selector);
         lowLevelERC20Transfer.transferERC20(address(0), _recipient, amount);
+    }
+
+    function testTransferERC20WithERC1155Fails(uint256 amount) external {
+        MockERC1155 mockERC1155 = new MockERC1155();
+        vm.expectRevert(ERC20TransferFail.selector);
+        lowLevelERC20Transfer.transferERC20(address(mockERC1155), _recipient, amount);
+    }
+
+    function testTransferFromERC20WithERC1155Fails(uint256 amount) external {
+        MockERC1155 mockERC1155 = new MockERC1155();
+        vm.expectRevert(ERC20TransferFromFail.selector);
+        lowLevelERC20Transfer.transferFromERC20(address(mockERC1155), _sender, _recipient, amount);
     }
 }

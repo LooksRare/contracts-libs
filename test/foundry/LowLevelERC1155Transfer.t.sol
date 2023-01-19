@@ -3,6 +3,8 @@ pragma solidity ^0.8.17;
 
 import {LowLevelERC1155Transfer} from "../../contracts/lowLevelCallers/LowLevelERC1155Transfer.sol";
 import {NotAContract} from "../../contracts/errors/GenericErrors.sol";
+import {ERC1155SafeTransferFromFail, ERC1155SafeBatchTransferFrom} from "../../contracts/errors/LowLevelErrors.sol";
+import {MockERC721} from "../mock/MockERC721.sol";
 import {MockERC1155} from "../mock/MockERC1155.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
@@ -102,5 +104,47 @@ contract LowLevelERC1155TransferTest is TestParameters, TestHelpers {
 
         vm.expectRevert(NotAContract.selector);
         lowLevelERC1155Transfer.safeBatchTransferFromERC1155(address(0), _sender, _recipient, tokenIds, amounts);
+    }
+
+    function testSafeTransferFromERC1155WithERC721Fails(uint256 tokenId, uint256 amount)
+        external
+        asPrankedUser(_sender)
+    {
+        MockERC721 mockERC721 = new MockERC721();
+        mockERC721.mint(_sender, tokenId);
+        mockERC721.setApprovalForAll(address(lowLevelERC1155Transfer), true);
+        vm.expectRevert(ERC1155SafeTransferFromFail.selector);
+        lowLevelERC1155Transfer.safeTransferFromERC1155(address(mockERC721), _sender, _recipient, tokenId, amount);
+    }
+
+    function testSafeBatchTransferFromERC1155WithERC721Fails(
+        uint256 tokenId0,
+        uint256 amount0,
+        uint256 amount1
+    ) external asPrankedUser(_sender) {
+        vm.assume(tokenId0 < type(uint256).max);
+        uint256 tokenId1 = tokenId0 + 1;
+
+        MockERC721 mockERC721 = new MockERC721();
+        mockERC721.mint(_sender, tokenId0);
+        mockERC721.mint(_sender, tokenId1);
+        mockERC721.setApprovalForAll(address(lowLevelERC1155Transfer), true);
+
+        uint256[] memory amounts = new uint256[](2);
+        amounts[0] = amount0;
+        amounts[1] = amount1;
+
+        uint256[] memory tokenIds = new uint256[](2);
+        tokenIds[0] = tokenId0;
+        tokenIds[1] = tokenId1;
+
+        vm.expectRevert(ERC1155SafeBatchTransferFrom.selector);
+        lowLevelERC1155Transfer.safeBatchTransferFromERC1155(
+            address(mockERC721),
+            _sender,
+            _recipient,
+            tokenIds,
+            amounts
+        );
     }
 }

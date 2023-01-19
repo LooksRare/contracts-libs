@@ -3,7 +3,9 @@ pragma solidity ^0.8.17;
 
 import {LowLevelERC20Approve} from "../../contracts/lowLevelCallers/LowLevelERC20Approve.sol";
 import {NotAContract} from "../../contracts/errors/GenericErrors.sol";
+import {ERC20ApprovalFail} from "../../contracts/errors/LowLevelErrors.sol";
 import {MockERC20} from "../mock/MockERC20.sol";
+import {MockERC1155} from "../mock/MockERC1155.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
 contract ImplementedLowLevelERC20Approve is LowLevelERC20Approve {
@@ -38,5 +40,11 @@ contract LowLevelERC20ApproveTest is TestHelpers, TestParameters {
     function testApproveERC20NotAContract(uint256 amount) external {
         vm.expectRevert(NotAContract.selector);
         lowLevelERC20Approve.approveERC20(address(0), _operator, amount);
+    }
+
+    function testApproveERC20WithERC1155Fails(uint256 amount) external {
+        MockERC1155 mockERC1155 = new MockERC1155();
+        vm.expectRevert(ERC20ApprovalFail.selector);
+        lowLevelERC20Approve.approveERC20(address(mockERC1155), _operator, amount);
     }
 }
