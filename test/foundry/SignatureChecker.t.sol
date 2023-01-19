@@ -65,6 +65,31 @@ contract SignatureCheckerTest is TestHelpers, TestParameters {
         signatureChecker.verify(hashedMessage, user1, signature);
     }
 
+    function testCannotSignIfWrongVParameter(uint8 v) public {
+        vm.assume(v != 27 && v != 28);
+        (, bytes32 r, bytes32 s) = vm.sign(privateKeyUser1, keccak256(abi.encodePacked(_message)));
+
+        // Encode the signature
+        bytes memory signature = abi.encodePacked(r, s, v);
+        bytes32 hashedMessage = _computeHash(_message);
+
+        vm.expectRevert(abi.encodeWithSelector(BadSignatureV.selector, v));
+        signatureChecker.verify(hashedMessage, user1, signature);
+    }
+
+    function testCannotSignIfWrongSParameter(bytes32 s) public {
+        vm.assume(uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0);
+
+        (uint8 v, bytes32 r, ) = vm.sign(privateKeyUser1, keccak256(abi.encodePacked(_message)));
+
+        // Encode the signature with the fuzzed s
+        bytes memory signature = abi.encodePacked(r, s, v);
+        bytes32 hashedMessage = _computeHash(_message);
+
+        vm.expectRevert(abi.encodeWithSelector(BadSignatureS.selector));
+        signatureChecker.verify(hashedMessage, user1, signature);
+    }
+
     function testCannotSignIfWrongSignatureLength(uint256 length) public {
         // Getting OutOfGas starting from 16,776,985, probably due to memory cost
         vm.assume(length != 64 && length != 65 && length < 16_776_985);
