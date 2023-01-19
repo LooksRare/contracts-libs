@@ -8,6 +8,7 @@ import {IReentrancyGuard} from "./interfaces/IReentrancyGuard.sol";
  * @title ReentrancyGuard
  * @notice This contract protects against reentrancy attacks.
  *         It is adjusted from OpenZeppelin.
+ * @author LooksRare protocol team (👀,💎)
  */
 abstract contract ReentrancyGuard is IReentrancyGuard {
     uint256 private _status;

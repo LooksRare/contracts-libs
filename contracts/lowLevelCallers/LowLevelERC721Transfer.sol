@@ -21,12 +21,7 @@ contract LowLevelERC721Transfer {
      * @param to Address of the recipient
      * @param tokenId tokenId to transfer
      */
-    function _executeERC721TransferFrom(
-        address collection,
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal {
+    function _executeERC721TransferFrom(address collection, address from, address to, uint256 tokenId) internal {
         if (collection.code.length == 0) {
             revert NotAContract();
         }

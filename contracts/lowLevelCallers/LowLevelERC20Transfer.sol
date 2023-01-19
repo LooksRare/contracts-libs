@@ -21,12 +21,7 @@ contract LowLevelERC20Transfer {
      * @param to Recipient address
      * @param amount Amount to transfer
      */
-    function _executeERC20TransferFrom(
-        address currency,
-        address from,
-        address to,
-        uint256 amount
-    ) internal {
+    function _executeERC20TransferFrom(address currency, address from, address to, uint256 amount) internal {
         if (currency.code.length == 0) {
             revert NotAContract();
         }
@@ -50,11 +45,7 @@ contract LowLevelERC20Transfer {
      * @param to Recipient address
      * @param amount Amount to transfer
      */
-    function _executeERC20DirectTransfer(
-        address currency,
-        address to,
-        uint256 amount
-    ) internal {
+    function _executeERC20DirectTransfer(address currency, address to, uint256 amount) internal {
         if (currency.code.length == 0) {
             revert NotAContract();
         }

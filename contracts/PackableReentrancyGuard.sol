@@ -11,6 +11,7 @@ import {IReentrancyGuard} from "./interfaces/IReentrancyGuard.sol";
  *         The only difference between this contract and ReentrancyGuard
  *         is that _status is uint8 instead of uint256 so that it can be
  *         packed with other contracts' storage variables.
+ * @author LooksRare protocol team (👀,💎)
  */
 abstract contract PackableReentrancyGuard is IReentrancyGuard {
     uint8 private _status;

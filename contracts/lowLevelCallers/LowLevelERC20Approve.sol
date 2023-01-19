@@ -20,11 +20,7 @@ contract LowLevelERC20Approve {
      * @param to Operator address
      * @param amount Amount to approve
      */
-    function _executeERC20Approve(
-        address currency,
-        address to,
-        uint256 amount
-    ) internal {
+    function _executeERC20Approve(address currency, address to, uint256 amount) internal {
         if (currency.code.length == 0) {
             revert NotAContract();
         }

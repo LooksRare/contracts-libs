@@ -11,6 +11,7 @@ import {BadSignatureS, BadSignatureV, InvalidSignatureERC1271, InvalidSignatureE
  * @title SignatureChecker
  * @notice This library is used to verify signatures for EOAs (with lengths of both 65 and 64 bytes)
  *         and contracts (ERC1271).
+ * @author LooksRare protocol team (👀,💎)
  */
 library SignatureChecker {
     /**
@@ -20,11 +21,7 @@ library SignatureChecker {
      * @param signature Signature parameters encoded (v, r, s)
      * @dev For EIP-712 signatures, the hash must be the digest (computed with signature hash and domain separator)
      */
-    function verify(
-        bytes32 hash,
-        address signer,
-        bytes calldata signature
-    ) internal view {
+    function verify(bytes32 hash, address signer, bytes calldata signature) internal view {
         if (signer.code.length == 0) {
             if (_recoverEOASigner(hash, signature) == signer) return;
             revert InvalidSignatureEOA();
@@ -41,15 +38,7 @@ library SignatureChecker {
      * @return s The s output of the signature
      * @return v The recovery identifier, must be 27 or 28
      */
-    function splitSignature(bytes calldata signature)
-        internal
-        pure
-        returns (
-            bytes32 r,
-            bytes32 s,
-            uint8 v
-        )
-    {
+    function splitSignature(bytes calldata signature) internal pure returns (bytes32 r, bytes32 s, uint8 v) {
         if (signature.length == 64) {
             bytes32 vs;
             assembly {

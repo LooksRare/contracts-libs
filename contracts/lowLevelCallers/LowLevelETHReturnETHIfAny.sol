@@ -6,7 +6,7 @@ import {ETHTransferFail_error_selector, ETHTransferFail_error_length, Error_sele
 
 /**
  * @title LowLevelETHReturnETHIfAny
- * @notice This contract contains a function to return all ETH held in a contract
+ * @notice This contract contains a function to return all ETH held in a contract.
  * @author LooksRare protocol team (👀,💎)
  */
 contract LowLevelETHReturnETHIfAny {
