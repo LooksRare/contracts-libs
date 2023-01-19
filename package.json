@@ -74,7 +74,7 @@
     "husky": "^7.0.4",
     "merkletreejs": "^0.2.31",
     "prettier": "^2.3.2",
-    "prettier-plugin-solidity": "^1.0.0",
+    "prettier-plugin-solidity": "^1.1.1",
     "release-it": "^15.0.0",
     "solhint": "^3.3.7",
     "solidity-bytes-utils": "^0.8.0",
