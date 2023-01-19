@@ -8,11 +8,7 @@ contract MockERC1155 is ERC1155 {
         return "uri";
     }
 
-    function mint(
-        address to,
-        uint256 tokenId,
-        uint256 amount
-    ) public {
+    function mint(address to, uint256 tokenId, uint256 amount) public {
         _mint(to, tokenId, amount, "");
     }
 }

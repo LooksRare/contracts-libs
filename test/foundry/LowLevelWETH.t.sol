@@ -6,11 +6,7 @@ import {LowLevelWETH} from "../../contracts/lowLevelCallers/LowLevelWETH.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
 contract ImplementedLowLevelWETH is LowLevelWETH {
-    function transferETH(
-        address _WETH,
-        address _to,
-        uint256 _gasLimit
-    ) external payable {
+    function transferETH(address _WETH, address _to, uint256 _gasLimit) external payable {
         _transferETHAndWrapIfFailWithGasLimit(_WETH, _to, msg.value, _gasLimit);
     }
 }

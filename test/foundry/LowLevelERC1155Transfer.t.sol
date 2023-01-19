@@ -106,10 +106,10 @@ contract LowLevelERC1155TransferTest is TestParameters, TestHelpers {
         lowLevelERC1155Transfer.safeBatchTransferFromERC1155(address(0), _sender, _recipient, tokenIds, amounts);
     }
 
-    function testSafeTransferFromERC1155WithERC721Fails(uint256 tokenId, uint256 amount)
-        external
-        asPrankedUser(_sender)
-    {
+    function testSafeTransferFromERC1155WithERC721Fails(
+        uint256 tokenId,
+        uint256 amount
+    ) external asPrankedUser(_sender) {
         MockERC721 mockERC721 = new MockERC721();
         mockERC721.mint(_sender, tokenId);
         mockERC721.setApprovalForAll(address(lowLevelERC1155Transfer), true);
