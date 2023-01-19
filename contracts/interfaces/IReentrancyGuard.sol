@@ -3,6 +3,7 @@ pragma solidity ^0.8.17;
 
 /**
  * @title IReentrancyGuard
+ * @author LooksRare protocol team (👀,💎)
  */
 interface IReentrancyGuard {
     /**

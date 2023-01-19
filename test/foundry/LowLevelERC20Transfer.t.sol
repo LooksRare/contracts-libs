@@ -9,20 +9,11 @@ import {MockERC1155} from "../mock/MockERC1155.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
 contract ImplementedLowLevelERC20Transfer is LowLevelERC20Transfer {
-    function transferERC20(
-        address currency,
-        address to,
-        uint256 amount
-    ) external {
+    function transferERC20(address currency, address to, uint256 amount) external {
         _executeERC20DirectTransfer(currency, to, amount);
     }
 
-    function transferFromERC20(
-        address currency,
-        address from,
-        address to,
-        uint256 amount
-    ) external {
+    function transferFromERC20(address currency, address from, address to, uint256 amount) external {
         _executeERC20TransferFrom(currency, from, to, amount);
     }
 }

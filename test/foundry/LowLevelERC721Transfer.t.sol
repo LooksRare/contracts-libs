@@ -9,12 +9,7 @@ import {MockERC1155} from "../mock/MockERC1155.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
 contract ImplementedLowLevelERC721Transfer is LowLevelERC721Transfer {
-    function transferERC721(
-        address collection,
-        address from,
-        address to,
-        uint256 tokenId
-    ) external {
+    function transferERC721(address collection, address from, address to, uint256 tokenId) external {
         _executeERC721TransferFrom(collection, from, to, tokenId);
     }
 }

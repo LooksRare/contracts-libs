@@ -6,28 +6,15 @@ import {LowLevelERC20Transfer} from "../../contracts/lowLevelCallers/LowLevelERC
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
 contract ImplementedLowLevelERC20 is LowLevelERC20Approve, LowLevelERC20Transfer {
-    function approveERC20(
-        address currency,
-        address to,
-        uint256 amount
-    ) external {
+    function approveERC20(address currency, address to, uint256 amount) external {
         _executeERC20Approve(currency, to, amount);
     }
 
-    function transferERC20(
-        address currency,
-        address to,
-        uint256 amount
-    ) external {
+    function transferERC20(address currency, address to, uint256 amount) external {
         _executeERC20DirectTransfer(currency, to, amount);
     }
 
-    function transferFromERC20(
-        address currency,
-        address from,
-        address to,
-        uint256 amount
-    ) external {
+    function transferFromERC20(address currency, address from, address to, uint256 amount) external {
         _executeERC20TransferFrom(currency, from, to, amount);
     }
 }
@@ -38,7 +25,7 @@ abstract contract TestParameters {
     address internal _sender = _tetherTreasury;
     address internal _recipient = address(250);
     address internal _operator = address(69);
-    uint256 internal _amount = 10_000 * (10**6); // USDT has 6 decimals
+    uint256 internal _amount = 10_000 * (10 ** 6); // USDT has 6 decimals
 
     // Ankr RPC endpoint is public
     string internal _MAINNET_RPC_URL = "https://rpc.ankr.com/eth";

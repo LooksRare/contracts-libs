@@ -9,11 +9,7 @@ import {MockERC1155} from "../mock/MockERC1155.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
 contract ImplementedLowLevelERC20Approve is LowLevelERC20Approve {
-    function approveERC20(
-        address currency,
-        address to,
-        uint256 amount
-    ) external {
+    function approveERC20(address currency, address to, uint256 amount) external {
         _executeERC20Approve(currency, to, amount);
     }
 }

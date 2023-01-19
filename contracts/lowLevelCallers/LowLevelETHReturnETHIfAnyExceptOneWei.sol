@@ -6,7 +6,7 @@ import {ETHTransferFail_error_selector, ETHTransferFail_error_length, Error_sele
 
 /**
  * @title LowLevelETHReturnETHIfAnyExceptOneWei
- * @notice This contract contains a function to return all ETH except 1 wei held in a contract
+ * @notice This contract contains a function to return all ETH except 1 wei held.
  * @author LooksRare protocol team (👀,💎)
  */
 contract LowLevelETHReturnETHIfAnyExceptOneWei {

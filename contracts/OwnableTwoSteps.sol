@@ -9,6 +9,7 @@ import {IOwnableTwoSteps} from "./interfaces/IOwnableTwoSteps.sol";
  * @notice This contract offers transfer of ownership in two steps with potential owner
  *         having to confirm the transaction to become the owner.
  *         Renouncement of the ownership is also a two-step process since the next potential owner is the address(0).
+ * @author LooksRare protocol team (👀,💎)
  */
 abstract contract OwnableTwoSteps is IOwnableTwoSteps {
     /**
