@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import {Test} from "../../../lib/forge-std/src/Test.sol";
-import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";
+import {BytesLib} from "./BytesLib.sol";
 
 abstract contract TestHelpers is Test {
     using BytesLib for bytes;
