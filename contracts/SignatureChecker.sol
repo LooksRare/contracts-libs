@@ -39,22 +39,22 @@ library SignatureChecker {
      * @return v The recovery identifier, must be 27 or 28
      */
     function splitSignature(bytes calldata signature) internal pure returns (bytes32 r, bytes32 s, uint8 v) {
-        if (signature.length == 64) {
-            bytes32 vs;
-            assembly {
-                r := calldataload(signature.offset)
-                vs := calldataload(add(signature.offset, 0x20))
-                s := and(vs, 0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)
-                v := add(shr(255, vs), 27)
-            }
-        } else if (signature.length == 65) {
+        uint256 length = signature.length;
+        if (length == 65) {
             assembly {
                 r := calldataload(signature.offset)
                 s := calldataload(add(signature.offset, 0x20))
                 v := byte(0, calldataload(add(signature.offset, 0x40)))
             }
+        } else if (length == 64) {
+            assembly {
+                r := calldataload(signature.offset)
+                let vs := calldataload(add(signature.offset, 0x20))
+                s := and(vs, 0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)
+                v := add(shr(255, vs), 27)
+            }
         } else {
-            revert WrongSignatureLength(signature.length);
+            revert WrongSignatureLength(length);
         }
 
         if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) {
@@ -78,6 +78,8 @@ library SignatureChecker {
         // If the signature is valid (and not malleable), return the signer's address
         signer = ecrecover(hash, v, r, s);
 
-        if (signer == address(0)) revert NullSignerAddress();
+        if (signer == address(0)) {
+            revert NullSignerAddress();
+        }
     }
 }
