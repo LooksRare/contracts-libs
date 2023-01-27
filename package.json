@@ -77,7 +77,6 @@
     "prettier-plugin-solidity": "^1.1.1",
     "release-it": "^15.0.0",
     "solhint": "^3.3.7",
-    "solidity-bytes-utils": "^0.8.0",
     "solidity-coverage": "^0.7.21",
     "solmate": "^6.6.1",
     "ts-node": "^10.1.0",
