@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 // Assembly constants
-import {ETHTransferFail_error_selector, ETHTransferFail_error_length, Error_selector_offset} from "../errors/AssemblyConstants.sol";
+import {ETHTransferFail_error_selector, ETHTransferFail_error_length, Error_selector_offset} from "../constants/AssemblyConstants.sol";
 
 /**
  * @title LowLevelETHReturnETHIfAny

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
+import {ERC1271_MAGICVALUE} from "../../../contracts/constants/StandardConstants.sol";
 import {IERC1271} from "../../../contracts/interfaces/generic/IERC1271.sol";
 
 contract ERC1271Contract is IERC1271 {
@@ -10,9 +11,6 @@ contract ERC1271Contract is IERC1271 {
     error SignatureLengthInvalid(uint256 length);
 
     address public owner;
-
-    // bytes4(keccak256("isValidSignature(bytes32,bytes)")
-    bytes4 internal constant MAGICVALUE = 0x1626ba7e;
 
     constructor(address _owner) {
         owner = _owner;
@@ -55,7 +53,7 @@ contract ERC1271Contract is IERC1271 {
         address signer = ecrecover(hash, v, r, s);
 
         if (signer == owner) {
-            return MAGICVALUE;
+            return ERC1271_MAGICVALUE;
         } else {
             return 0xffffffff;
         }

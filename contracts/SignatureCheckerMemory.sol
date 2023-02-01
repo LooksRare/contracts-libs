@@ -4,6 +4,9 @@ pragma solidity ^0.8.17;
 // Interfaces
 import {IERC1271} from "./interfaces/generic/IERC1271.sol";
 
+// Constants
+import {ERC1271_MAGICVALUE} from "./constants/StandardConstants.sol";
+
 // Errors
 import {SignatureParameterSInvalid, SignatureParameterVInvalid, SignatureERC1271Invalid, SignatureEOAInvalid, NullSignerAddress, SignatureLengthInvalid} from "./errors/SignatureCheckerErrors.sol";
 
@@ -26,7 +29,7 @@ library SignatureCheckerMemory {
             if (_recoverEOASigner(hash, signature) == signer) return;
             revert SignatureEOAInvalid();
         } else {
-            if (IERC1271(signer).isValidSignature(hash, signature) == 0x1626ba7e) return;
+            if (IERC1271(signer).isValidSignature(hash, signature) == ERC1271_MAGICVALUE) return;
             revert SignatureERC1271Invalid();
         }
     }
