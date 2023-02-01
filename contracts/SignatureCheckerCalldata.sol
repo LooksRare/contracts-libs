@@ -5,15 +5,15 @@ pragma solidity ^0.8.17;
 import {IERC1271} from "./interfaces/generic/IERC1271.sol";
 
 // Errors
-import {BadSignatureS, BadSignatureV, InvalidSignatureERC1271, InvalidSignatureEOA, NullSignerAddress, WrongSignatureLength} from "./errors/SignatureCheckerErrors.sol";
+import {SignatureParameterSInvalid, SignatureParameterVInvalid, SignatureERC1271Invalid, SignatureEOAInvalid, NullSignerAddress, SignatureLengthInvalid} from "./errors/SignatureCheckerErrors.sol";
 
 /**
- * @title SignatureChecker
+ * @title SignatureCheckerCalldata
  * @notice This library is used to verify signatures for EOAs (with lengths of both 65 and 64 bytes)
  *         and contracts (ERC1271).
  * @author LooksRare protocol team (👀,💎)
  */
-library SignatureChecker {
+library SignatureCheckerCalldata {
     /**
      * @notice This function verifies whether the signer is valid for a hash and raw signature.
      * @param hash Data hash
@@ -24,10 +24,10 @@ library SignatureChecker {
     function verify(bytes32 hash, address signer, bytes calldata signature) internal view {
         if (signer.code.length == 0) {
             if (_recoverEOASigner(hash, signature) == signer) return;
-            revert InvalidSignatureEOA();
+            revert SignatureEOAInvalid();
         } else {
             if (IERC1271(signer).isValidSignature(hash, signature) == 0x1626ba7e) return;
-            revert InvalidSignatureERC1271();
+            revert SignatureERC1271Invalid();
         }
     }
 
@@ -54,15 +54,15 @@ library SignatureChecker {
                 v := add(shr(255, vs), 27)
             }
         } else {
-            revert WrongSignatureLength(length);
+            revert SignatureLengthInvalid(length);
         }
 
         if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) {
-            revert BadSignatureS();
+            revert SignatureParameterSInvalid();
         }
 
         if (v != 27 && v != 28) {
-            revert BadSignatureV(v);
+            revert SignatureParameterVInvalid(v);
         }
     }
 
