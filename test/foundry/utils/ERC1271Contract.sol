@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {ERC1271_MAGICVALUE} from "../../../contracts/constants/StandardConstants.sol";
+import {ERC1271_MAGIC_VALUE} from "../../../contracts/constants/StandardConstants.sol";
 import {IERC1271} from "../../../contracts/interfaces/generic/IERC1271.sol";
 
 contract ERC1271Contract is IERC1271 {
@@ -53,7 +53,7 @@ contract ERC1271Contract is IERC1271 {
         address signer = ecrecover(hash, v, r, s);
 
         if (signer == owner) {
-            return ERC1271_MAGICVALUE;
+            return ERC1271_MAGIC_VALUE;
         } else {
             return 0xffffffff;
         }
