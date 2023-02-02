@@ -5,7 +5,7 @@ pragma solidity ^0.8.17;
 import {IERC1155} from "../interfaces/generic/IERC1155.sol";
 
 // Errors
-import {ERC1155SafeTransferFromFail, ERC1155SafeBatchTransferFrom} from "../errors/LowLevelErrors.sol";
+import {ERC1155SafeTransferFromFail, ERC1155SafeBatchTransferFromFail} from "../errors/LowLevelErrors.sol";
 import {NotAContract} from "../errors/GenericErrors.sol";
 
 /**
@@ -64,7 +64,7 @@ contract LowLevelERC1155Transfer {
         );
 
         if (!status) {
-            revert ERC1155SafeBatchTransferFrom();
+            revert ERC1155SafeBatchTransferFromFail();
         }
     }
 }

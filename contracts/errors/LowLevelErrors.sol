@@ -34,4 +34,4 @@ error ERC1155SafeTransferFromFail();
 /**
  * @notice It is emitted if the ERC1155 safeBatchTransferFrom fails.
  */
-error ERC1155SafeBatchTransferFrom();
+error ERC1155SafeBatchTransferFromFail();
