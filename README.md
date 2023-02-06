@@ -7,6 +7,23 @@ This repository contains a set of Solidity contracts that can be used across con
 
 It also contains generic contract interfaces (for EIP/ERC) that can be used.
 
+## Installation
+
+```shell
+# Yarn
+yarn add @looksrare/contracts-libs
+
+# NPM
+npm install @looksrare/contracts-libs
+```
+
+## NPM package
+
+The NPM package contains the following:
+
+- Solidity smart contracts (_".sol"_)
+- ABIs (_".json"_)
+
 ## Current contracts
 
 | Name                                  | Description                                                                                                                   | Type     | Latest version |
