@@ -39,7 +39,7 @@
     "format:write": "prettier --write '**/*.{js,jsx,ts,tsx,json,yaml,sol,md}'",
     "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
     "prepare": "husky install",
-    "release": "release-it",
+    "release": "hardhat export-abi && release-it",
     "test:forge": "forge test",
     "test:hardhat": "hardhat test",
     "test:hardhat:gas": "REPORT_GAS=true hardhat test",
