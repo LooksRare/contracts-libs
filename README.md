@@ -26,21 +26,22 @@ The NPM package contains the following:
 
 ## Current contracts
 
-| Name                                  | Description                                                                                                                   | Type     | Latest version |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------- | -------------- |
-| OwnableTwoSteps                       | Contract for managing ownership of a smart contract. The transfer of ownership is done in a 2-step process.                   | Contract | 2.5.0          |
-| SignatureCheckerCalldata              | Contract for verifying the validity of a (calldata) signature for EOA (64-byte, 65-byte signatures) and EIP-1271.             | Contract | 3.0.0          |
-| SignatureCheckerMemory                | Contract for verifying the validity of a (memory) signature for EOA (64-byte, 65-byte signatures) and EIP-1271.               | Contract | 3.0.0          |
-| ReentrancyGuard                       | Contract with a modifier to prevent reentrancy calls.                                                                         | Contract | 2.4.4          |
-| PackedReentrancyGuard                 | Contract with a modifier to prevent reentrancy calls. Adapted from ReentrancyGuard.                                           | Contract | 2.5.1          |
-| LowLevelETHTransfer                   | Low-level call function to transfer ETH                                                                                       | Contract | 2.4.4          |
-| LowLevelETHReturnETHIfAny             | Low-level call function to return all ETH left                                                                                | Contract | 2.4.4          |
-| LowLevelETHReturnETHIfAnyExceptOneWei | Low-level call function to return all ETH left except one wei                                                                 | Contract | 2.4.4          |
-| LowLevelWETH                          | Low-level call functions to transfer ETH with an option to wrap to WETH if the original ETH transfer fails within a gas limit | Contract | 2.4.4          |
-| LowLevelERC20Approve                  | Low-level call functions for ERC20 approve functions                                                                          | Contract | 2.4.4          |
-| LowLevelERC20Transfer                 | Low-level call functions for ERC20 transfer functions                                                                         | Contract | 2.4.4          |
-| LowLevelERC721Transfer                | Low-level call functions for ERC721 functions                                                                                 | Contract | 2.4.4          |
-| LowLevelERC1155Transfer               | Low-level call functions for ERC1155 functions                                                                                | Contract | 2.4.4          |
+| Name                                  | Description                                                                                                                   | Type     | Latest version | Audited? |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------- | -------------- | -------- |
+| OwnableTwoSteps                       | Contract for managing ownership of a smart contract. The transfer of ownership is done in a 2-step process.                   | Contract | 2.5.0          | Yes      |
+| SignatureCheckerCalldata              | Contract for verifying the validity of a (calldata) signature for EOA (64-byte, 65-byte signatures) and EIP-1271.             | Contract | 3.0.0          | Yes      |
+| SignatureCheckerMemory                | Contract for verifying the validity of a (memory) signature for EOA (64-byte, 65-byte signatures) and EIP-1271.               | Contract | 3.0.0          | Yes      |
+| ReentrancyGuard                       | Contract with a modifier to prevent reentrancy calls.                                                                         | Contract | 2.4.4          | Yes      |
+| PackedReentrancyGuard                 | Contract with a modifier to prevent reentrancy calls. Adapted from ReentrancyGuard.                                           | Contract | 2.5.1          | Yes      |
+| LowLevelETHTransfer                   | Low-level call function to transfer ETH                                                                                       | Contract | 2.4.4          | Yes      |
+| LowLevelETHReturnETHIfAny             | Low-level call function to return all ETH left                                                                                | Contract | 2.4.4          | Yes      |
+| LowLevelETHReturnETHIfAnyExceptOneWei | Low-level call function to return all ETH left except one wei                                                                 | Contract | 2.4.4          | Yes      |
+| LowLevelWETH                          | Low-level call functions to transfer ETH with an option to wrap to WETH if the original ETH transfer fails within a gas limit | Contract | 2.4.4          | Yes      |
+| LowLevelERC20Approve                  | Low-level call functions for ERC20 approve functions                                                                          | Contract | 2.4.4          | Yes      |
+| LowLevelERC20Transfer                 | Low-level call functions for ERC20 transfer functions                                                                         | Contract | 2.4.4          | Yes      |
+| LowLevelERC721Transfer                | Low-level call functions for ERC721 functions                                                                                 | Contract | 2.4.4          | Yes      |
+| LowLevelERC1155Transfer               | Low-level call functions for ERC1155 functions                                                                                | Contract | 2.4.4          | Yes      |
+| ProtocolFee                           | Contract for defining protocol fee recipient and basis points                                                                 | Contract | 3.2.0          | No       |
 
 ## About this repo
 
