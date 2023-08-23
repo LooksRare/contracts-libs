@@ -41,6 +41,7 @@ The NPM package contains the following:
 | LowLevelERC20Transfer                 | Low-level call functions for ERC20 transfer functions                                                                         | Contract | 2.4.4          |
 | LowLevelERC721Transfer                | Low-level call functions for ERC721 functions                                                                                 | Contract | 2.4.4          |
 | LowLevelERC1155Transfer               | Low-level call functions for ERC1155 functions                                                                                | Contract | 2.4.4          |
+| ProtocolFee                           | Contract for defining protocol fee recipient and basis points                                                                 | Contract | 3.2.0          |
 
 ## About this repo
 
