@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.24;
+pragma solidity ^0.8.20;
 
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {IBlast, YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "./interfaces/IBlast.sol";
