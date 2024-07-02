@@ -15,6 +15,7 @@ import {IERC20Rebasing, YieldMode as IERC20Rebasing__YieldMode} from "./interfac
 contract BlastYield is AccessControl {
     address public immutable WETH;
     address public immutable USDB;
+    bytes32 private constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
 
     /**
      * @param _blast Blast precompile
@@ -33,6 +34,8 @@ contract BlastYield is AccessControl {
         address _weth
     ) {
         _grantRole(DEFAULT_ADMIN_ROLE, _owner);
+        _grantRole(OPERATOR_ROLE, _owner);
+        _grantRole(OPERATOR_ROLE, _blastPointsOperator);
 
         WETH = _weth;
         USDB = _usdb;
