@@ -10,7 +10,7 @@ contract MockYield {
         address governor;
     }
 
-    mapping(address => Config) public config;
+    mapping(address _contract => Config) public config;
 
     function configure(YieldMode _yield, GasMode _gasMode, address _governor) external {
         config[msg.sender] = Config(_yield, _gasMode, _governor);
