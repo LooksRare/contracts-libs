@@ -33,7 +33,6 @@ contract BlastYield is AccessControl {
         address _usdb,
         address _weth
     ) {
-        _grantRole(DEFAULT_ADMIN_ROLE, _owner);
         _grantRole(OPERATOR_ROLE, _owner);
         _grantRole(OPERATOR_ROLE, _blastPointsOperator);
 
@@ -51,7 +50,7 @@ contract BlastYield is AccessControl {
      * @param wethReceiver The receiver of WETH.
      * @param usdbReceiver The receiver of USDB.
      */
-    function claim(address wethReceiver, address usdbReceiver) external virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+    function claim(address wethReceiver, address usdbReceiver) external virtual onlyRole(OPERATOR_ROLE) {
         uint256 claimableWETH = IERC20Rebasing(WETH).getClaimableAmount(address(this));
         if (claimableWETH != 0) {
             IERC20Rebasing(WETH).claim(wethReceiver, claimableWETH);

@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.20;
 
+import {IAccessControl} from "@openzeppelin/contracts/access/IAccessControl.sol";
 import {BlastYield} from "../../contracts/BlastYield.sol";
 import {Test} from "../../lib/forge-std/src/Test.sol";
 import {YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "../../contracts/interfaces/IBlast.sol";
@@ -21,24 +22,24 @@ contract BlastYield_Test is Test {
 
     address public owner = address(69);
     address public operator = address(420);
+    address public user1 = address(1);
     address private constant TREASURY = address(69420);
-    address internal constant BLAST = 0x4300000000000000000000000000000000000002;
     address internal constant BLAST_POINTS = 0x2536FE9ab3F511540F2f9e2eC2A805005C3Dd800;
+    bytes32 private constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
 
     function setUp() public {
-        vm.etch(BLAST, address(new MockYield()).code);
         vm.etch(BLAST_POINTS, address(new MockPoints()).code);
         weth = new MockWETH();
         usdb = new MockERC20("USDB", "USDB");
-        blastYield = new BlastYield(BLAST, BLAST_POINTS, operator, owner, address(usdb), address(weth));
+        mockYield = new MockYield();
+        blastYield = new BlastYield(address(mockYield), BLAST_POINTS, operator, owner, address(usdb), address(weth));
     }
 
     function test_setUpState() public {
         assertEq(blastYield.WETH(), address(weth));
         assertEq(blastYield.USDB(), address(usdb));
-        assertTrue(blastYield.hasRole(bytes32(0), owner));
-        assertTrue(blastYield.hasRole(keccak256("OPERATOR_ROLE"), owner));
-        assertTrue(blastYield.hasRole(keccak256("OPERATOR_ROLE"), operator));
+        assertTrue(blastYield.hasRole(OPERATOR_ROLE, owner));
+        assertTrue(blastYield.hasRole(OPERATOR_ROLE, operator));
 
         (IBlast__YieldMode yieldMode, IBlast__GasMode gasMode, address governor) = mockYield.config(
             address(blastYield)
@@ -54,11 +55,8 @@ contract BlastYield_Test is Test {
         assertEq(uint8(usdbYieldMode), uint8(IERC20Rebasing__YieldMode.CLAIMABLE));
     }
 
-    function test_claim() public {
-        vm.startPrank(owner);
+    function test_claim() public asPrankedUser(owner) {
         blastYield.claim(TREASURY, TREASURY);
-
-        vm.stopPrank();
 
         assertEq(weth.balanceOf(address(blastYield)), 0);
         assertEq(usdb.balanceOf(address(blastYield)), 0);
@@ -66,12 +64,16 @@ contract BlastYield_Test is Test {
         assertEq(usdb.balanceOf(TREASURY), 1 ether);
     }
 
-    function test_claim_RevertIf_NotOwner() public {
+    function test_claim_RevertIf_NotOwner() public asPrankedUser(user1) {
         vm.expectRevert(
-            abi.encodePacked(
-                "AccessControl: account 0xb4c79dab8f259c7aee6e5b2aa729821864227e84 is missing role 0x0000000000000000000000000000000000000000000000000000000000000000"
-            )
+            abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, user1, OPERATOR_ROLE)
         );
         blastYield.claim(TREASURY, TREASURY);
+    }
+
+    modifier asPrankedUser(address user) {
+        vm.startPrank(user);
+        _;
+        vm.stopPrank();
     }
 }
