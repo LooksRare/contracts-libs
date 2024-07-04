@@ -9,10 +9,10 @@ import {Test} from "../../lib/forge-std/src/Test.sol";
 import {YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "../../contracts/interfaces/IBlast.sol";
 import {YieldMode as IERC20Rebasing__YieldMode} from "../../contracts/interfaces/IERC20Rebasing.sol";
 
-import {MockERC20} from "../mock/MockBlastERC20.sol";
-import {MockPoints} from "../mock/MockBlastPoints.sol";
-import {MockWETH} from "../mock/MockBlastWETH.sol";
-import {MockYield} from "../mock/MockBlastYield.sol";
+import {MockBlastERC20} from "../mock/MockBlastERC20.sol";
+import {MockBlastPoints} from "../mock/MockBlastPoints.sol";
+import {MockBlastWETH} from "../mock/MockBlastWETH.sol";
+import {MockBlastYield} from "../mock/MockBlastYield.sol";
 
 contract BlastYieldOwnableTwoSteps is BlastYield, OwnableTwoSteps {
     constructor(
@@ -30,10 +30,10 @@ contract BlastYieldOwnableTwoSteps is BlastYield, OwnableTwoSteps {
 }
 
 contract BlastYieldOwnableTwoSteps_Test is Test {
-    MockWETH private weth;
-    MockERC20 private usdb;
-    MockYield private mockYield;
-    MockPoints private mockPoints;
+    MockBlastWETH private weth;
+    MockBlastERC20 private usdb;
+    MockBlastYield private mockBlastYield;
+    MockBlastPoints private mockBlastPoints;
     BlastYieldOwnableTwoSteps private blastYieldOwnableTwoSteps;
 
     address public owner = address(69);
@@ -42,13 +42,13 @@ contract BlastYieldOwnableTwoSteps_Test is Test {
     address private constant TREASURY = address(69420);
 
     function setUp() public {
-        weth = new MockWETH();
-        usdb = new MockERC20("USDB", "USDB");
-        mockYield = new MockYield();
-        mockPoints = new MockPoints();
+        weth = new MockBlastWETH();
+        usdb = new MockBlastERC20("USDB", "USDB");
+        mockBlastYield = new MockBlastYield();
+        mockBlastPoints = new MockBlastPoints();
         blastYieldOwnableTwoSteps = new BlastYieldOwnableTwoSteps(
-            address(mockYield),
-            address(mockPoints),
+            address(mockBlastYield),
+            address(mockBlastPoints),
             operator,
             owner,
             address(usdb),
@@ -60,7 +60,7 @@ contract BlastYieldOwnableTwoSteps_Test is Test {
         assertEq(blastYieldOwnableTwoSteps.WETH(), address(weth));
         assertEq(blastYieldOwnableTwoSteps.USDB(), address(usdb));
 
-        (IBlast__YieldMode yieldMode, IBlast__GasMode gasMode, address governor) = mockYield.config(
+        (IBlast__YieldMode yieldMode, IBlast__GasMode gasMode, address governor) = mockBlastYield.config(
             address(blastYieldOwnableTwoSteps)
         );
         assertEq(uint8(yieldMode), uint8(IBlast__YieldMode.CLAIMABLE));

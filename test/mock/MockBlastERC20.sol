@@ -5,7 +5,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 import {YieldMode} from "../../../contracts/interfaces/IERC20Rebasing.sol";
 
-contract MockERC20 is ERC20 {
+contract MockBlastERC20 is ERC20 {
     mapping(address _contract => YieldMode) public yieldMode;
 
     constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {}

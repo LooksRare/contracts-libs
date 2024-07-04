@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import {YieldMode} from "../../../contracts/interfaces/IERC20Rebasing.sol";
 
-contract MockWETH {
+contract MockBlastWETH {
     string public name = "Wrapped Ether";
     string public symbol = "WETH";
     uint8 public decimals = 18;

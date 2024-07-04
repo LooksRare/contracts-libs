@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import {YieldMode, GasMode} from "../../../contracts/interfaces/IBlast.sol";
 
-contract MockYield {
+contract MockBlastYield {
     struct Config {
         YieldMode yieldMode;
         GasMode gasMode;
