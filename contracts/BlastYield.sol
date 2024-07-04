@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-import {OwnableTwoSteps} from "./OwnableTwoSteps.sol";
 import {IBlast, YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "./interfaces/IBlast.sol";
 import {IBlastPoints} from "./interfaces/IBlastPoints.sol";
 import {IERC20Rebasing, YieldMode as IERC20Rebasing__YieldMode} from "./interfaces/IERC20Rebasing.sol";
@@ -12,7 +11,7 @@ import {IERC20Rebasing, YieldMode as IERC20Rebasing__YieldMode} from "./interfac
  * @notice This contract is a base contract for future contracts that wish to claim Blast WETH or USDB yield to inherit from.
  * @author LooksRare protocol team (👀,💎)
  */
-contract BlastYield is OwnableTwoSteps {
+contract BlastYield {
     address public immutable WETH;
     address public immutable USDB;
 
@@ -31,7 +30,7 @@ contract BlastYield is OwnableTwoSteps {
         address _owner,
         address _usdb,
         address _weth
-    ) OwnableTwoSteps(_owner) {
+    ) {
         WETH = _weth;
         USDB = _usdb;
 
@@ -46,7 +45,7 @@ contract BlastYield is OwnableTwoSteps {
      * @param wethReceiver The receiver of WETH.
      * @param usdbReceiver The receiver of USDB.
      */
-    function claim(address wethReceiver, address usdbReceiver) external virtual onlyOwner {
+    function _claim(address wethReceiver, address usdbReceiver) internal virtual {
         uint256 claimableWETH = IERC20Rebasing(WETH).getClaimableAmount(address(this));
         if (claimableWETH != 0) {
             IERC20Rebasing(WETH).claim(wethReceiver, claimableWETH);

@@ -3,6 +3,7 @@
 pragma solidity ^0.8.20;
 
 import {IOwnableTwoSteps} from "../../contracts/interfaces/IOwnableTwoSteps.sol";
+import {OwnableTwoSteps} from "../../contracts/OwnableTwoSteps.sol";
 import {BlastYield} from "../../contracts/BlastYield.sol";
 import {Test} from "../../lib/forge-std/src/Test.sol";
 import {YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "../../contracts/interfaces/IBlast.sol";
@@ -13,12 +14,27 @@ import {MockPoints} from "../mock/MockBlastPoints.sol";
 import {MockWETH} from "../mock/MockBlastWETH.sol";
 import {MockYield} from "../mock/MockBlastYield.sol";
 
-contract BlastYield_Test is Test {
+contract BlastYieldOwnableTwoSteps is BlastYield, OwnableTwoSteps {
+    constructor(
+        address _blast,
+        address _blastPoints,
+        address _blastPointsOperator,
+        address _owner,
+        address _usdb,
+        address _weth
+    ) BlastYield(_blast, _blastPoints, _blastPointsOperator, _owner, _usdb, _weth) OwnableTwoSteps(_owner) {}
+
+    function claim(address wethReceiver, address usdbReceiver) public onlyOwner {
+        _claim(wethReceiver, usdbReceiver);
+    }
+}
+
+contract BlastYieldOwnableTwoSteps_Test is Test {
     MockWETH private weth;
     MockERC20 private usdb;
     MockYield private mockYield;
     MockPoints private mockPoints;
-    BlastYield private blastYield;
+    BlastYieldOwnableTwoSteps private blastYieldOwnableTwoSteps;
 
     address public owner = address(69);
     address public operator = address(420);
@@ -32,40 +48,46 @@ contract BlastYield_Test is Test {
         weth = new MockWETH();
         usdb = new MockERC20("USDB", "USDB");
         mockYield = new MockYield();
-        blastYield = new BlastYield(address(mockYield), BLAST_POINTS, operator, owner, address(usdb), address(weth));
+        blastYieldOwnableTwoSteps = new BlastYieldOwnableTwoSteps(
+            address(mockYield),
+            BLAST_POINTS,
+            operator,
+            owner,
+            address(usdb),
+            address(weth)
+        );
     }
 
     function test_setUpState() public {
-        assertEq(blastYield.WETH(), address(weth));
-        assertEq(blastYield.USDB(), address(usdb));
-        assertEq(blastYield.owner(), owner);
+        assertEq(blastYieldOwnableTwoSteps.WETH(), address(weth));
+        assertEq(blastYieldOwnableTwoSteps.USDB(), address(usdb));
 
         (IBlast__YieldMode yieldMode, IBlast__GasMode gasMode, address governor) = mockYield.config(
-            address(blastYield)
+            address(blastYieldOwnableTwoSteps)
         );
         assertEq(uint8(yieldMode), uint8(IBlast__YieldMode.CLAIMABLE));
         assertEq(uint8(gasMode), uint8(IBlast__GasMode.CLAIMABLE));
         assertEq(governor, owner);
 
-        IERC20Rebasing__YieldMode wethYieldMode = weth.yieldMode(address(blastYield));
+        IERC20Rebasing__YieldMode wethYieldMode = weth.yieldMode(address(blastYieldOwnableTwoSteps));
         assertEq(uint8(wethYieldMode), uint8(IERC20Rebasing__YieldMode.CLAIMABLE));
 
-        IERC20Rebasing__YieldMode usdbYieldMode = usdb.yieldMode(address(blastYield));
+        IERC20Rebasing__YieldMode usdbYieldMode = usdb.yieldMode(address(blastYieldOwnableTwoSteps));
         assertEq(uint8(usdbYieldMode), uint8(IERC20Rebasing__YieldMode.CLAIMABLE));
     }
 
     function test_claim() public asPrankedUser(owner) {
-        blastYield.claim(TREASURY, TREASURY);
+        blastYieldOwnableTwoSteps.claim(TREASURY, TREASURY);
 
-        assertEq(weth.balanceOf(address(blastYield)), 0);
-        assertEq(usdb.balanceOf(address(blastYield)), 0);
+        assertEq(weth.balanceOf(address(blastYieldOwnableTwoSteps)), 0);
+        assertEq(usdb.balanceOf(address(blastYieldOwnableTwoSteps)), 0);
         assertEq(weth.balanceOf(TREASURY), 1 ether);
         assertEq(usdb.balanceOf(TREASURY), 1 ether);
     }
 
     function test_claim_RevertIf_NotOwner() public asPrankedUser(user1) {
         vm.expectRevert(IOwnableTwoSteps.NotOwner.selector);
-        blastYield.claim(TREASURY, TREASURY);
+        blastYieldOwnableTwoSteps.claim(TREASURY, TREASURY);
     }
 
     modifier asPrankedUser(address user) {
