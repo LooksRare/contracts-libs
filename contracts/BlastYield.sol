@@ -41,7 +41,7 @@ contract BlastYield {
     }
 
     /**
-     * @notice Claim Blast yield. Only callable by contract owner.
+     * @notice Claim Blast yield. Guarding of the function is dependent on the inherited contract.
      * @param wethReceiver The receiver of WETH.
      * @param usdbReceiver The receiver of USDB.
      */
