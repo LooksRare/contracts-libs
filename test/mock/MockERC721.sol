@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.7;
 
-import {ERC721} from "solmate/src/tokens/ERC721.sol";
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {IERC165} from "../../contracts/interfaces/generic/IERC165.sol";
 
 contract MockERC721 is ERC721("MockERC721", "MockERC721") {
