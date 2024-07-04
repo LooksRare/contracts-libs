@@ -40,17 +40,16 @@ contract BlastYieldOwnableTwoSteps_Test is Test {
     address public operator = address(420);
     address public user1 = address(1);
     address private constant TREASURY = address(69420);
-    address internal constant BLAST_POINTS = 0x2536FE9ab3F511540F2f9e2eC2A805005C3Dd800;
     bytes32 private constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
 
     function setUp() public {
-        vm.etch(BLAST_POINTS, address(new MockPoints()).code);
         weth = new MockWETH();
         usdb = new MockERC20("USDB", "USDB");
         mockYield = new MockYield();
+        mockPoints = new MockPoints();
         blastYieldOwnableTwoSteps = new BlastYieldOwnableTwoSteps(
             address(mockYield),
-            BLAST_POINTS,
+            address(mockPoints),
             operator,
             owner,
             address(usdb),
