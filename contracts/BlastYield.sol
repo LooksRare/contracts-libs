@@ -19,7 +19,7 @@ contract BlastYield {
      * @param _blast Blast precompile
      * @param _blastPoints Blast points
      * @param _blastPointsOperator Blast points operator
-     * @param _owner Owner of the contract
+     * @param _governor Governor of the contract
      * @param _usdb USDB address
      * @param _weth WETH address
      */
@@ -27,14 +27,14 @@ contract BlastYield {
         address _blast,
         address _blastPoints,
         address _blastPointsOperator,
-        address _owner,
+        address _governor,
         address _usdb,
         address _weth
     ) {
         WETH = _weth;
         USDB = _usdb;
 
-        IBlast(_blast).configure(IBlast__YieldMode.CLAIMABLE, IBlast__GasMode.CLAIMABLE, _owner);
+        IBlast(_blast).configure(IBlast__YieldMode.CLAIMABLE, IBlast__GasMode.CLAIMABLE, _governor);
         IBlastPoints(_blastPoints).configurePointsOperator(_blastPointsOperator);
         IERC20Rebasing(_weth).configure(IERC20Rebasing__YieldMode.CLAIMABLE);
         IERC20Rebasing(_usdb).configure(IERC20Rebasing__YieldMode.CLAIMABLE);
