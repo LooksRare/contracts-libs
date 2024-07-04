@@ -6,6 +6,7 @@ import {IOwnableTwoSteps} from "../../contracts/interfaces/IOwnableTwoSteps.sol"
 import {OwnableTwoSteps} from "../../contracts/OwnableTwoSteps.sol";
 import {BlastYield} from "../../contracts/BlastYield.sol";
 import {Test} from "../../lib/forge-std/src/Test.sol";
+import {TestHelpers} from "./utils/TestHelpers.sol";
 import {YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "../../contracts/interfaces/IBlast.sol";
 import {YieldMode as IERC20Rebasing__YieldMode} from "../../contracts/interfaces/IERC20Rebasing.sol";
 
@@ -29,7 +30,7 @@ contract BlastYieldOwnableTwoSteps is BlastYield, OwnableTwoSteps {
     }
 }
 
-contract BlastYieldOwnableTwoSteps_Test is Test {
+contract BlastYieldOwnableTwoSteps_Test is Test, TestHelpers {
     MockBlastWETH private weth;
     MockBlastERC20 private usdb;
     MockBlastYield private mockBlastYield;
@@ -86,11 +87,5 @@ contract BlastYieldOwnableTwoSteps_Test is Test {
     function test_claim_RevertIf_NotOwner() public asPrankedUser(user1) {
         vm.expectRevert(IOwnableTwoSteps.NotOwner.selector);
         blastYieldOwnableTwoSteps.claim(TREASURY, TREASURY);
-    }
-
-    modifier asPrankedUser(address user) {
-        vm.startPrank(user);
-        _;
-        vm.stopPrank();
     }
 }
