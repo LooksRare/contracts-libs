@@ -19,7 +19,7 @@ contract BlastYield {
      * @param _blast Blast precompile
      * @param _blastPoints Blast points
      * @param _blastPointsOperator Blast points operator
-     * @param _governor Governor of the contract
+     * @param _governor The address that’s allowed to claim the contract’s yield and gas
      * @param _usdb USDB address
      * @param _weth WETH address
      */
