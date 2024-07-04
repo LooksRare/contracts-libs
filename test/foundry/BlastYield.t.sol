@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {IAccessControl} from "@openzeppelin/contracts/access/IAccessControl.sol";
+import {IOwnableTwoSteps} from "../../contracts/interfaces/IOwnableTwoSteps.sol";
 import {BlastYield} from "../../contracts/BlastYield.sol";
 import {Test} from "../../lib/forge-std/src/Test.sol";
 import {YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "../../contracts/interfaces/IBlast.sol";
@@ -38,8 +38,7 @@ contract BlastYield_Test is Test {
     function test_setUpState() public {
         assertEq(blastYield.WETH(), address(weth));
         assertEq(blastYield.USDB(), address(usdb));
-        assertTrue(blastYield.hasRole(OPERATOR_ROLE, owner));
-        assertTrue(blastYield.hasRole(OPERATOR_ROLE, operator));
+        assertEq(blastYield.owner(), owner);
 
         (IBlast__YieldMode yieldMode, IBlast__GasMode gasMode, address governor) = mockYield.config(
             address(blastYield)
@@ -65,9 +64,7 @@ contract BlastYield_Test is Test {
     }
 
     function test_claim_RevertIf_NotOwner() public asPrankedUser(user1) {
-        vm.expectRevert(
-            abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, user1, OPERATOR_ROLE)
-        );
+        vm.expectRevert(IOwnableTwoSteps.NotOwner.selector);
         blastYield.claim(TREASURY, TREASURY);
     }
 

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
+import {OwnableTwoSteps} from "./OwnableTwoSteps.sol";
 import {IBlast, YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "./interfaces/IBlast.sol";
 import {IBlastPoints} from "./interfaces/IBlastPoints.sol";
 import {IERC20Rebasing, YieldMode as IERC20Rebasing__YieldMode} from "./interfaces/IERC20Rebasing.sol";
@@ -12,10 +12,9 @@ import {IERC20Rebasing, YieldMode as IERC20Rebasing__YieldMode} from "./interfac
  * @notice This contract is a base contract for future contracts that wish to claim Blast WETH or USDB yield to inherit from.
  * @author LooksRare protocol team (👀,💎)
  */
-contract BlastYield is AccessControl {
+contract BlastYield is OwnableTwoSteps {
     address public immutable WETH;
     address public immutable USDB;
-    bytes32 private constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
 
     /**
      * @param _blast Blast precompile
@@ -32,10 +31,7 @@ contract BlastYield is AccessControl {
         address _owner,
         address _usdb,
         address _weth
-    ) {
-        _grantRole(OPERATOR_ROLE, _owner);
-        _grantRole(OPERATOR_ROLE, _blastPointsOperator);
-
+    ) OwnableTwoSteps(_owner) {
         WETH = _weth;
         USDB = _usdb;
 
@@ -50,7 +46,7 @@ contract BlastYield is AccessControl {
      * @param wethReceiver The receiver of WETH.
      * @param usdbReceiver The receiver of USDB.
      */
-    function claim(address wethReceiver, address usdbReceiver) external virtual onlyRole(OPERATOR_ROLE) {
+    function claim(address wethReceiver, address usdbReceiver) external virtual onlyOwner {
         uint256 claimableWETH = IERC20Rebasing(WETH).getClaimableAmount(address(this));
         if (claimableWETH != 0) {
             IERC20Rebasing(WETH).claim(wethReceiver, claimableWETH);
