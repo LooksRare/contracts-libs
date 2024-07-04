@@ -40,7 +40,6 @@ contract BlastYieldOwnableTwoSteps_Test is Test {
     address public operator = address(420);
     address public user1 = address(1);
     address private constant TREASURY = address(69420);
-    bytes32 private constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
 
     function setUp() public {
         weth = new MockWETH();
