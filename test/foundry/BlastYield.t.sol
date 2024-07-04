@@ -30,7 +30,7 @@ contract BlastYieldOwnableTwoSteps is BlastYield, OwnableTwoSteps {
     }
 }
 
-contract BlastYieldOwnableTwoSteps_Test is Test, TestHelpers {
+contract BlastYieldOwnableTwoSteps_Test is TestHelpers {
     MockBlastWETH private weth;
     MockBlastERC20 private usdb;
     MockBlastYield private mockBlastYield;
