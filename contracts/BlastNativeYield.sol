@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {IBlast, IBlast__YieldMode, IBlast__GasMode} from "./interfaces/IBlast.sol";
+import {IBlast, YieldMode, GasMode} from "./interfaces/IBlast.sol";
 import {BlastPoints} from "./BlastPoints.sol";
 
 /**
@@ -23,6 +23,6 @@ contract BlastNativeYield is BlastPoints {
         address _blastPointsOperator,
         address _governor
     ) BlastPoints(_blastPoints, _blastPointsOperator) {
-        IBlast(_blast).configure(IBlast__YieldMode.CLAIMABLE, IBlast__GasMode.CLAIMABLE, _governor);
+        IBlast(_blast).configure(YieldMode.CLAIMABLE, GasMode.CLAIMABLE, _governor);
     }
 }
