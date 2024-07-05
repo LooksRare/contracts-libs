@@ -2,16 +2,15 @@
 
 pragma solidity ^0.8.20;
 
-import {IBlast, YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "./interfaces/IBlast.sol";
-import {IBlastPoints} from "./interfaces/IBlastPoints.sol";
+import {BlastNativeYield} from "./BlastNativeYield.sol";
 import {IERC20Rebasing, YieldMode as IERC20Rebasing__YieldMode} from "./interfaces/IERC20Rebasing.sol";
 
 /**
- * @title BlastYield
- * @notice This contract is a base contract for future contracts that wish to claim Blast WETH or USDB yield to inherit from.
+ * @title BlastERC20RebasingYield
+ * @notice This contract is a base contract for future contracts that wish to claim Blast WETH or USDB yield to inherit from
  * @author LooksRare protocol team (👀,💎)
  */
-contract BlastYield {
+contract BlastERC20RebasingYield is BlastNativeYield {
     address public immutable WETH;
     address public immutable USDB;
 
@@ -30,12 +29,10 @@ contract BlastYield {
         address _governor,
         address _usdb,
         address _weth
-    ) {
+    ) BlastNativeYield(_blast, _blastPoints, _blastPointsOperator, _governor) {
         WETH = _weth;
         USDB = _usdb;
 
-        IBlast(_blast).configure(IBlast__YieldMode.CLAIMABLE, IBlast__GasMode.CLAIMABLE, _governor);
-        IBlastPoints(_blastPoints).configurePointsOperator(_blastPointsOperator);
         IERC20Rebasing(_weth).configure(IERC20Rebasing__YieldMode.CLAIMABLE);
         IERC20Rebasing(_usdb).configure(IERC20Rebasing__YieldMode.CLAIMABLE);
     }
