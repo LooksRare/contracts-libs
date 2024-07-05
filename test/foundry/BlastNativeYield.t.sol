@@ -6,7 +6,7 @@ import {IOwnableTwoSteps} from "../../contracts/interfaces/IOwnableTwoSteps.sol"
 import {OwnableTwoSteps} from "../../contracts/OwnableTwoSteps.sol";
 import {BlastNativeYield} from "../../contracts/BlastNativeYield.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
-import {YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "../../contracts/interfaces/IBlast.sol";
+import {YieldMode, GasMode} from "../../contracts/interfaces/IBlast.sol";
 
 import {MockBlastPoints} from "../mock/MockBlastPoints.sol";
 import {MockBlastYield} from "../mock/MockBlastYield.sol";
@@ -27,11 +27,9 @@ contract BlastNativeYield_Test is TestHelpers {
     }
 
     function test_setUpState() public {
-        (IBlast__YieldMode yieldMode, IBlast__GasMode gasMode, address governor) = mockBlastYield.config(
-            address(blastNativeYield)
-        );
-        assertEq(uint8(yieldMode), uint8(IBlast__YieldMode.CLAIMABLE));
-        assertEq(uint8(gasMode), uint8(IBlast__GasMode.CLAIMABLE));
+        (YieldMode yieldMode, GasMode gasMode, address governor) = mockBlastYield.config(address(blastNativeYield));
+        assertEq(uint8(yieldMode), uint8(YieldMode.CLAIMABLE));
+        assertEq(uint8(gasMode), uint8(GasMode.CLAIMABLE));
         assertEq(governor, owner);
     }
 }
