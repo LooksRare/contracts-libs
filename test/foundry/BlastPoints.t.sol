@@ -8,26 +8,19 @@ import {TestHelpers} from "./utils/TestHelpers.sol";
 
 import {MockBlastPoints} from "../mock/MockBlastPoints.sol";
 
-contract BlastPointsOwnableTwoSteps is BlastPoints, OwnableTwoSteps {
-    constructor(
-        address _blastPoints,
-        address _blastPointsOperator
-    ) BlastPoints(_blastPoints, _blastPointsOperator) OwnableTwoSteps(_blastPointsOperator) {}
-}
-
 contract BlastPoints_Test is TestHelpers {
     MockBlastPoints private mockBlastPoints;
-    BlastPointsOwnableTwoSteps private blastPointsOwnableTwoSteps;
+    BlastPoints private blastPoints;
 
     address public operator = address(420);
     address private constant TREASURY = address(69420);
 
     function setUp() public {
         mockBlastPoints = new MockBlastPoints();
-        blastPointsOwnableTwoSteps = new BlastPointsOwnableTwoSteps(address(mockBlastPoints), operator);
+        blastPoints = new BlastPoints(address(mockBlastPoints), operator);
     }
 
     function test_setUpState() public {
-        assertEq(mockBlastPoints.contractOperators(address(blastPointsOwnableTwoSteps)), operator);
+        assertEq(mockBlastPoints.contractOperators(address(blastPoints)), operator);
     }
 }

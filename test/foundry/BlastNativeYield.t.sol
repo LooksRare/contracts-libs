@@ -11,19 +11,10 @@ import {YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "../../
 import {MockBlastPoints} from "../mock/MockBlastPoints.sol";
 import {MockBlastYield} from "../mock/MockBlastYield.sol";
 
-contract BlastNativeYieldOwnableTwoSteps is BlastNativeYield, OwnableTwoSteps {
-    constructor(
-        address _blast,
-        address _blastPoints,
-        address _blastPointsOperator,
-        address _owner
-    ) BlastNativeYield(_blast, _blastPoints, _blastPointsOperator, _owner) OwnableTwoSteps(_owner) {}
-}
-
 contract BlastNativeYield_Test is TestHelpers {
     MockBlastYield private mockBlastYield;
     MockBlastPoints private mockBlastPoints;
-    BlastNativeYieldOwnableTwoSteps private blastNativeYieldOwnableTwoSteps;
+    BlastNativeYield private blastNativeYield;
 
     address public owner = address(69);
     address public operator = address(420);
@@ -32,17 +23,12 @@ contract BlastNativeYield_Test is TestHelpers {
     function setUp() public {
         mockBlastPoints = new MockBlastPoints();
         mockBlastYield = new MockBlastYield();
-        blastNativeYieldOwnableTwoSteps = new BlastNativeYieldOwnableTwoSteps(
-            address(mockBlastYield),
-            address(mockBlastPoints),
-            operator,
-            owner
-        );
+        blastNativeYield = new BlastNativeYield(address(mockBlastYield), address(mockBlastPoints), operator, owner);
     }
 
     function test_setUpState() public {
         (IBlast__YieldMode yieldMode, IBlast__GasMode gasMode, address governor) = mockBlastYield.config(
-            address(blastNativeYieldOwnableTwoSteps)
+            address(blastNativeYield)
         );
         assertEq(uint8(yieldMode), uint8(IBlast__YieldMode.CLAIMABLE));
         assertEq(uint8(gasMode), uint8(IBlast__GasMode.CLAIMABLE));
