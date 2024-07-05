@@ -6,7 +6,7 @@ import {IBlastPoints} from "./interfaces/IBlastPoints.sol";
 
 /**
  * @title BlastPoints
- * @notice This contract is a base contract for future contracts that wish to claim Blast points to inherit from
+ * @notice This contract is a base for future contracts that wish to be recipients of Blast points to inherit from
  * @author LooksRare protocol team (👀,💎)
  */
 contract BlastPoints {
