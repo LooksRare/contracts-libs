@@ -15,7 +15,7 @@ contract BlastPointsOwnableTwoSteps is BlastPoints, OwnableTwoSteps {
     ) BlastPoints(_blastPoints, _blastPointsOperator) OwnableTwoSteps(_blastPointsOperator) {}
 }
 
-contract BlastPointsOwnableTwoSteps_Test is TestHelpers {
+contract BlastPoints_Test is TestHelpers {
     MockBlastPoints private mockBlastPoints;
     BlastPointsOwnableTwoSteps private blastPointsOwnableTwoSteps;
 

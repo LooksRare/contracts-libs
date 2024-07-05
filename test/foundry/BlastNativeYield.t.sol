@@ -20,7 +20,7 @@ contract BlastNativeYieldOwnableTwoSteps is BlastNativeYield, OwnableTwoSteps {
     ) BlastNativeYield(_blast, _blastPoints, _blastPointsOperator, _owner) OwnableTwoSteps(_owner) {}
 }
 
-contract BlastNativeYieldOwnableTwoSteps_Test is TestHelpers {
+contract BlastNativeYield_Test is TestHelpers {
     MockBlastYield private mockBlastYield;
     MockBlastPoints private mockBlastPoints;
     BlastNativeYieldOwnableTwoSteps private blastNativeYieldOwnableTwoSteps;
