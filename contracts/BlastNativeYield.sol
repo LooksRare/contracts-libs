@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 
 import {IBlast, YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "./interfaces/IBlast.sol";
 import {BlastPoints} from "./BlastPoints.sol";
+
 /**
  * @title BlastNativeYield
  * @notice This contract is a base contract for future contracts that wish to claim native yield and Blast points to inherit from
