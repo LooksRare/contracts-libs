@@ -7,7 +7,7 @@ import {IERC20Rebasing, YieldMode as IERC20Rebasing__YieldMode} from "./interfac
 
 /**
  * @title BlastERC20RebasingYield
- * @notice This contract is a base contract for future contracts that wish to claim Blast WETH or USDB yield to inherit from
+ * @notice This contract is a base contract for inheriting functions to claim Blast WETH or USDB yield
  * @author LooksRare protocol team (👀,💎)
  */
 contract BlastERC20RebasingYield is BlastNativeYield {

@@ -7,7 +7,7 @@ import {BlastPoints} from "./BlastPoints.sol";
 
 /**
  * @title BlastNativeYield
- * @notice This contract is a base contract for future contracts that wish to claim native yield and Blast points to inherit from
+ * @notice This contract is a base contract for inheriting functions to claim native yield and for those that wish to recieve Blast points
  * @author LooksRare protocol team (👀,💎)
  */
 contract BlastNativeYield is BlastPoints {
