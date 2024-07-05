@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.20;
 
-import {IBlast, YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "./interfaces/IBlast.sol";
+import {IBlast, IBlast__YieldMode, IBlast__GasMode} from "./interfaces/IBlast.sol";
 import {BlastPoints} from "./BlastPoints.sol";
 
 /**
