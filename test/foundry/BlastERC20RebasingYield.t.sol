@@ -6,7 +6,6 @@ import {IOwnableTwoSteps} from "../../contracts/interfaces/IOwnableTwoSteps.sol"
 import {OwnableTwoSteps} from "../../contracts/OwnableTwoSteps.sol";
 import {BlastERC20RebasingYield} from "../../contracts/BlastERC20RebasingYield.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
-import {YieldMode as IBlast__YieldMode, GasMode as IBlast__GasMode} from "../../contracts/interfaces/IBlast.sol";
 import {YieldMode as IERC20Rebasing__YieldMode} from "../../contracts/interfaces/IERC20Rebasing.sol";
 
 import {MockBlastERC20} from "../mock/MockBlastERC20.sol";
