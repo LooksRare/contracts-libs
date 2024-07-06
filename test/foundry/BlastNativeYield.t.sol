@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-import {IOwnableTwoSteps} from "../../contracts/interfaces/IOwnableTwoSteps.sol";
-import {OwnableTwoSteps} from "../../contracts/OwnableTwoSteps.sol";
 import {BlastNativeYield} from "../../contracts/BlastNativeYield.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 import {YieldMode, GasMode} from "../../contracts/interfaces/IBlast.sol";
@@ -18,7 +16,6 @@ contract BlastNativeYield_Test is TestHelpers {
 
     address public owner = address(69);
     address public operator = address(420);
-    address private constant TREASURY = address(69420);
 
     function setUp() public {
         mockBlastPoints = new MockBlastPoints();
