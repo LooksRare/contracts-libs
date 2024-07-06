@@ -3,7 +3,7 @@
 pragma solidity ^0.8.20;
 
 import {BlastNativeYield} from "./BlastNativeYield.sol";
-import {IERC20Rebasing, YieldMode as IERC20Rebasing__YieldMode} from "./interfaces/IERC20Rebasing.sol";
+import {IERC20Rebasing, YieldMode} from "./interfaces/IERC20Rebasing.sol";
 
 /**
  * @title BlastERC20RebasingYield
@@ -33,8 +33,8 @@ contract BlastERC20RebasingYield is BlastNativeYield {
         WETH = _weth;
         USDB = _usdb;
 
-        IERC20Rebasing(_weth).configure(IERC20Rebasing__YieldMode.CLAIMABLE);
-        IERC20Rebasing(_usdb).configure(IERC20Rebasing__YieldMode.CLAIMABLE);
+        IERC20Rebasing(_weth).configure(YieldMode.CLAIMABLE);
+        IERC20Rebasing(_usdb).configure(YieldMode.CLAIMABLE);
     }
 
     /**
