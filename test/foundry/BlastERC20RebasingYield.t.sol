@@ -6,7 +6,7 @@ import {IOwnableTwoSteps} from "../../contracts/interfaces/IOwnableTwoSteps.sol"
 import {OwnableTwoSteps} from "../../contracts/OwnableTwoSteps.sol";
 import {BlastERC20RebasingYield} from "../../contracts/BlastERC20RebasingYield.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
-import {YieldMode as IERC20Rebasing__YieldMode} from "../../contracts/interfaces/IERC20Rebasing.sol";
+import {YieldMode} from "../../contracts/interfaces/IERC20Rebasing.sol";
 
 import {MockBlastERC20} from "../mock/MockBlastERC20.sol";
 import {MockBlastPoints} from "../mock/MockBlastPoints.sol";
@@ -62,11 +62,11 @@ contract BlastERC20RebasingYield_Test is TestHelpers {
         assertEq(blastERC20RebasingYieldOwnableTwoSteps.WETH(), address(weth));
         assertEq(blastERC20RebasingYieldOwnableTwoSteps.USDB(), address(usdb));
 
-        IERC20Rebasing__YieldMode wethYieldMode = weth.yieldMode(address(blastERC20RebasingYieldOwnableTwoSteps));
-        assertEq(uint8(wethYieldMode), uint8(IERC20Rebasing__YieldMode.CLAIMABLE));
+        YieldMode wethYieldMode = weth.yieldMode(address(blastERC20RebasingYieldOwnableTwoSteps));
+        assertEq(uint8(wethYieldMode), uint8(YieldMode.CLAIMABLE));
 
-        IERC20Rebasing__YieldMode usdbYieldMode = usdb.yieldMode(address(blastERC20RebasingYieldOwnableTwoSteps));
-        assertEq(uint8(usdbYieldMode), uint8(IERC20Rebasing__YieldMode.CLAIMABLE));
+        YieldMode usdbYieldMode = usdb.yieldMode(address(blastERC20RebasingYieldOwnableTwoSteps));
+        assertEq(uint8(usdbYieldMode), uint8(YieldMode.CLAIMABLE));
     }
 
     function test_claim() public asPrankedUser(owner) {
