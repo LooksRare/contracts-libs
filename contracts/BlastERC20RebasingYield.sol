@@ -38,8 +38,8 @@ contract BlastERC20RebasingYield is BlastNativeYield {
     }
 
     /**
-     * @notice Claim Blast yield. Guarding of the function is dependent on the inherited contract. 
-     *         Inheriting does not allow claiming by default. 
+     * @notice Claim Blast yield. Guarding of the function is dependent on the inherited contract.
+     *         Inheriting does not allow claiming by default.
      *         A public or external function is required in the child contract to access the _claim function.
      * @param wethReceiver The receiver of WETH.
      * @param usdbReceiver The receiver of USDB.
