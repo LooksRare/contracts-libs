@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {WETH} from "solmate/src/tokens/WETH.sol";
+import {MockWETH} from "../mock/MockWETH.sol";
 import {LowLevelWETH} from "../../contracts/lowLevelCallers/LowLevelWETH.sol";
 import {TestHelpers} from "./utils/TestHelpers.sol";
 
@@ -30,18 +30,18 @@ contract RecipientFallback {
 contract LowLevelWETHTest is TestParameters, TestHelpers {
     ImplementedLowLevelWETH public lowLevelWETH;
     RecipientFallback public recipientFallback;
-    WETH public weth;
+    MockWETH public mockWeth;
 
     function setUp() external {
         lowLevelWETH = new ImplementedLowLevelWETH();
         recipientFallback = new RecipientFallback();
-        weth = new WETH();
+        mockWeth = new MockWETH();
     }
 
     function testTransferETHAndRevertsinWETH(uint256 amount) external payable asPrankedUser(_sender) {
         vm.deal(_sender, amount);
-        lowLevelWETH.transferETH{value: amount}(address(weth), address(recipientFallback), _GAS_LIMIT);
+        lowLevelWETH.transferETH{value: amount}(address(mockWeth), address(recipientFallback), _GAS_LIMIT);
         assertEq(address(recipientFallback).balance, 0);
-        assertEq(weth.balanceOf(address(recipientFallback)), amount);
+        assertEq(mockWeth.balanceOf(address(recipientFallback)), amount);
     }
 }
