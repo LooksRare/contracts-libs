@@ -27,7 +27,7 @@ contract BlastERC20RebasingYieldGuarded is BlastERC20RebasingYield, OwnableTwoSt
     {}
 
     function claim(address wethReceiver, address usdbReceiver) public onlyOwner {
-        _claim(wethReceiver, usdbReceiver);
+        _claimERC20RebasingYield(wethReceiver, usdbReceiver);
     }
 }
 

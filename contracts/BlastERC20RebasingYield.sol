@@ -44,7 +44,7 @@ contract BlastERC20RebasingYield is BlastNativeYield {
      * @param wethReceiver The receiver of WETH.
      * @param usdbReceiver The receiver of USDB.
      */
-    function _claim(address wethReceiver, address usdbReceiver) internal {
+    function _claimERC20RebasingYield(address wethReceiver, address usdbReceiver) internal {
         uint256 claimableWETH = IERC20Rebasing(WETH).getClaimableAmount(address(this));
         if (claimableWETH != 0) {
             IERC20Rebasing(WETH).claim(wethReceiver, claimableWETH);
