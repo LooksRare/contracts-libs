@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {YieldMode, GasMode} from "../../../contracts/interfaces/IBlast.sol";
+import {YieldMode, GasMode} from "../../contracts/interfaces/IBlast.sol";
 
 contract MockBlastYield {
     struct Config {

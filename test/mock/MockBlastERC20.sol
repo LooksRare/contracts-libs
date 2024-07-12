@@ -3,7 +3,7 @@ pragma solidity 0.8.23;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-import {YieldMode} from "../../../contracts/interfaces/IERC20Rebasing.sol";
+import {YieldMode} from "../../contracts/interfaces/IERC20Rebasing.sol";
 
 contract MockBlastERC20 is ERC20 {
     mapping(address _contract => YieldMode) public yieldMode;

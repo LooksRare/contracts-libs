@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {YieldMode} from "../../../contracts/interfaces/IERC20Rebasing.sol";
+import {YieldMode} from "../../contracts/interfaces/IERC20Rebasing.sol";
 
 contract MockBlastWETH {
     string public name = "Wrapped Ether";
