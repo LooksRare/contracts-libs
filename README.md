@@ -42,6 +42,9 @@ The NPM package contains the following:
 | LowLevelERC721Transfer                | Low-level call functions for ERC721 functions                                                                                 | Contract | 2.4.4          | Yes      |
 | LowLevelERC1155Transfer               | Low-level call functions for ERC1155 functions                                                                                | Contract | 2.4.4          | Yes      |
 | ProtocolFee                           | Contract for defining protocol fee recipient and basis points                                                                 | Contract | 3.2.0          | No       |
+| BlastNativeYield                      | Contract for claiming Blast native yield                                                                                      | Contract | 3.5.1          | No       |
+| BlastPoints                           | Contract for configuring Blast points                                                                                         | Contract | 3.5.1          | No       |
+| BlastERC20RebasingYield               | Contract for claiming Blast WETH/USDB yield                                                                                   | Contract | 3.5.1          | No       |
 
 ## About this repo
 
